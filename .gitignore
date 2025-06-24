@@ -1,0 +1,37 @@
+# Fichiers de build
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/cmake_install.cmake
+
+# Binaires
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dylib
+
+# Exécutables générés
+chip8
+tests_all
+tests_utils_death
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.swp
+*.DS_Store
+
+# Fichiers de test
+Testing/
+CTestTestfile.cmake
+
+# MacOS
+.DS_Store
+
+# CLion/JetBrains
+.idea/
+cmake-build-*/
