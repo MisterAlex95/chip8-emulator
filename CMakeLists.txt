@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(chip8-emulator)
 
 set(PROJECT_NAME "chip8")
+set(PROJECT_NAME_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -16,6 +17,7 @@ add_executable(${PROJECT_NAME}
 )
 
 include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${PROJECT_NAME_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GL_SILENCE_DEPRECATION)
