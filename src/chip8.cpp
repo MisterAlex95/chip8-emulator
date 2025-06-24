@@ -81,3 +81,62 @@ bool Chip8::loadROM(const char *filename)
 
     return true;
 }
+
+void Chip8::cycle()
+{
+    // === 1. FETCH ===
+    uint16_t opcode = (memory[pc] << 8) | memory[pc + 1];
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    uint8_t kk = opcode & 0x00FF;
+    uint16_t nnn = opcode & 0x0FFF;
+
+    std::cout << std::hex << "Opcode [PC=" << pc << "]: 0x" << opcode << std::endl;
+
+    // Avancer le PC *par défaut*, sauf si l'instruction saute ailleurs
+    pc += 2;
+
+    // === 2. DECODE + EXECUTE ===
+    switch (opcode & 0xF000)
+    {
+    case 0x0000:
+        switch (opcode & 0x00FF)
+        {
+        case 0x00E0: // CLS : Clear screen
+            display.fill(false);
+            break;
+
+        case 0x00EE: // RET : Return from subroutine
+            if (sp == 0)
+            {
+                std::cerr << "Erreur : retour sans sous-routine\n";
+                break;
+            }
+            --sp;
+            pc = stack[sp];
+            break;
+
+        default:
+            std::cerr << "Opcode inconnu 0x" << std::hex << opcode << "\n";
+            break;
+        }
+        break;
+
+    case 0x1000: // JP addr : Jump to address NNN
+    {
+        uint16_t address = opcode & 0x0FFF;
+        pc = address;
+        break;
+    }
+
+    default:
+        std::cerr << "Opcode non géré: 0x" << std::hex << opcode << "\n";
+        break;
+    }
+
+    // === 3. UPDATE TIMERS ===
+    if (delay_timer > 0)
+        --delay_timer;
+    if (sound_timer > 0)
+        --sound_timer;
+}

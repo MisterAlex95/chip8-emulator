@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     chip8->initialize();
     chip8->loadROM(argv[1]);
 
-    //    mainLoop(window);
+    mainLoop(window, chip8);
     cleanup(window, gl_context);
 
     return 0;

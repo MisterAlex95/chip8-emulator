@@ -9,6 +9,7 @@ class Chip8
 public:
     void initialize();
     bool loadROM(const char *filename);
+    void cycle();
 
 private:
     static constexpr uint16_t ROM_START_ADDRESS = 0x200;

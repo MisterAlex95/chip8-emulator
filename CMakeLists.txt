@@ -32,6 +32,7 @@ add_executable(tests_all
     tests/test_window.cpp
     tests/test_main.cpp
     src/window.cpp
+    src/chip8.cpp
     src/utils.cpp
 )
 
