@@ -1,12 +1,12 @@
 #include "window.hh"
 #include <OpenGL/gl.h>
 
-bool init(SDL_Window *&window, SDL_GLContext &gl_context)
+bool init(SDL_Window *&window, SDL_GLContext &gl_context, const char *window_title)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return false;
 
-    window = SDL_CreateWindow("SDL2 Window",
+    window = SDL_CreateWindow(window_title ? window_title : "SDL OpenGL Window",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               680, 480,

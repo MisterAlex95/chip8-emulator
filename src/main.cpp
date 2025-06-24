@@ -6,7 +6,7 @@ int main()
     SDL_Window *window = nullptr;
     SDL_GLContext gl_context = nullptr;
 
-    if (!init(window, gl_context))
+    if (!init(window, gl_context, "chip8 emulator"))
         sdlFail("Erreur d'initialisation SDL/OpenGL");
 
     mainLoop(window);
