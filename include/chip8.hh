@@ -3,6 +3,13 @@
 #define Chip8_HH
 
 #include <array>
+// Ensure DISPLAY_X and DISPLAY_Y are defined
+#ifndef DISPLAY_X
+#define DISPLAY_X 64
+#endif
+#ifndef DISPLAY_Y
+#define DISPLAY_Y 32
+#endif
 
 class Chip8
 {
@@ -10,6 +17,7 @@ public:
     void initialize();
     bool loadROM(const char *filename);
     void cycle();
+    const std::array<bool, DISPLAY_Y * DISPLAY_X> getDisplay();
 
 private:
     static constexpr uint16_t ROM_START_ADDRESS = 0x200;
@@ -35,7 +43,7 @@ private:
     uint8_t keys[16]; // Keypad
 
     // Display
-    std::array<bool, 64 * 32> display; // 64x32 pixel display
+    std::array<bool, DISPLAY_Y * DISPLAY_X> display; // 64x32 pixel display
 
     void loadFontset();
 };

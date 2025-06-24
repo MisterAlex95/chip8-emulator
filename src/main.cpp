@@ -6,17 +6,21 @@
 int main(int argc, char **argv)
 {
     SDL_Window *window = nullptr;
-    SDL_GLContext gl_context = nullptr;
+    SDL_Renderer *renderer;
 
-    if (!init(window, gl_context, "chip8 emulator"))
+    if (!init(window, renderer, "chip8 emulator"))
         sdlFail("Erreur d'initialisation SDL/OpenGL");
 
     Chip8 *chip8 = new Chip8();
     chip8->initialize();
-    chip8->loadROM(argv[1]);
+    bool isLoaded = chip8->loadROM(argv[1]);
 
-    mainLoop(window, chip8);
-    cleanup(window, gl_context);
+    if (isLoaded)
+    {
+        mainLoop(window, renderer, chip8);
+    }
+
+    cleanup(window, renderer);
 
     return 0;
 }

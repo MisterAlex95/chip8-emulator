@@ -6,11 +6,11 @@
 TEST(MainTest, InitAndCleanup)
 {
     SDL_Window *window = nullptr;
-    SDL_GLContext gl_context = nullptr;
+    SDL_Renderer *renderer = nullptr;
 
-    ASSERT_TRUE(init(window, gl_context));
+    ASSERT_TRUE(init(window, renderer, "test"));
     ASSERT_NE(window, nullptr);
-    ASSERT_NE(gl_context, nullptr);
+    ASSERT_NE(renderer, nullptr);
 
-    EXPECT_NO_THROW(cleanup(window, gl_context));
+    EXPECT_NO_THROW(cleanup(window, renderer));
 }

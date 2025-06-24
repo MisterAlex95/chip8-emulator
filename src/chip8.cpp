@@ -45,6 +45,12 @@ void Chip8::loadFontset()
 
 bool Chip8::loadROM(const char *filename)
 {
+    if (!filename)
+    {
+        std::cout << "Filename is empty\n";
+        return false;
+    }
+
     // Read .ch8 file
     std::cout << "Chargement de la ROM : " << filename << "\n";
     std::ifstream ROM(filename, std::ifstream::binary);
@@ -86,12 +92,8 @@ void Chip8::cycle()
 {
     // === 1. FETCH ===
     uint16_t opcode = (memory[pc] << 8) | memory[pc + 1];
-    uint8_t x = (opcode & 0x0F00) >> 8;
-    uint8_t y = (opcode & 0x00F0) >> 4;
-    uint8_t kk = opcode & 0x00FF;
-    uint16_t nnn = opcode & 0x0FFF;
 
-    std::cout << std::hex << "Opcode [PC=" << pc << "]: 0x" << opcode << std::endl;
+    // std::cout << std::hex << "Opcode [PC=" << pc << "]: 0x" << opcode << std::endl;
 
     // Avancer le PC *par défaut*, sauf si l'instruction saute ailleurs
     pc += 2;
@@ -129,6 +131,39 @@ void Chip8::cycle()
         break;
     }
 
+    case 0xD000: // Dxyn
+    {
+        uint8_t x = (opcode & 0x0F00) >> 8;
+        uint8_t y = (opcode & 0x00F0) >> 4;
+        uint8_t height = opcode & 0x000F;
+
+        V[0xF] = 0; // Reset collision flag
+
+        for (int row = 0; row < height; ++row)
+        {
+            uint8_t spriteByte = memory[I + row];
+            for (int col = 0; col < 8; ++col)
+            {
+                bool spritePixel = (spriteByte & (0x80 >> col)) != 0;
+                if (spritePixel)
+                {
+                    // Calculer la position sur l’écran en tenant compte du wrapping
+                    uint16_t pixelX = (V[x] + col) % 64;
+                    uint16_t pixelY = (V[y] + row) % 32;
+                    uint16_t pixelIndex = pixelY * 64 + pixelX;
+
+                    // Collision si pixel à l’écran était allumé et sera éteint après XOR
+                    if (display[pixelIndex] == true)
+                        V[0xF] = 1;
+
+                    // XOR du pixel
+                    display[pixelIndex] ^= true;
+                }
+            }
+        }
+        break;
+    }
+
     default:
         std::cerr << "Opcode non géré: 0x" << std::hex << opcode << "\n";
         break;
@@ -139,4 +174,9 @@ void Chip8::cycle()
         --delay_timer;
     if (sound_timer > 0)
         --sound_timer;
+}
+
+const std::array<bool, DISPLAY_Y * DISPLAY_X> Chip8::getDisplay()
+{
+    return this->display;
 }
