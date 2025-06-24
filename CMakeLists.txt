@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/utils.cpp
     src/window.cpp
+    src/chip8.cpp
 )
 
 include_directories(${SDL2_INCLUDE_DIRS})
