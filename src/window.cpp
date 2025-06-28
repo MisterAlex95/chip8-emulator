@@ -1,5 +1,5 @@
 #include "window.hh"
-#include "chip8.hh"
+#include "core/Chip8.hh"
 #include <OpenGL/gl.h>
 
 bool init(SDL_Window *&window, SDL_Renderer *&renderer, const char *window_title)
@@ -22,7 +22,7 @@ bool init(SDL_Window *&window, SDL_Renderer *&renderer, const char *window_title
     return true;
 }
 
-void mainLoop(SDL_Window *window, SDL_Renderer *renderer, Chip8 *chip8)
+void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
 {
     const int FPS = 60;
     const int frameDelay = 1000 / FPS; // ≈ 16 ms
@@ -35,6 +35,7 @@ void mainLoop(SDL_Window *window, SDL_Renderer *renderer, Chip8 *chip8)
 
         // 1. Gérer les événements SDL (fermeture de fenêtre, clavier, etc.)
         SDL_Event event;
+
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)

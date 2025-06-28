@@ -1,0 +1,44 @@
+# Basé sur le style Google avec améliorations
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Braces
+BreakBeforeBraces: Allman         # { sur une nouvelle ligne (meilleur pour le C++)
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: false
+
+# Pointeurs et références
+PointerAlignment: Left            # T* ptr et pas T *ptr
+SpaceBeforeParens: ControlStatements  # if () sans espace avant (mais pas pour fonctions)
+
+# Includes
+IncludeBlocks: Preserve
+SortIncludes: true
+IncludeCategories:
+  - Regex:           '^<.*\.h>'
+    Priority:        1
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^".*"$'
+    Priority:        2
+    SortPriority:    1
+    CaseSensitive:   false
+
+# Alignement
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignTrailingComments: true
+
+# Fonctions
+AlwaysBreakAfterReturnType: TopLevel
+
+# Divers
+ColumnLimit: 100                 # Ligne max à 100 caractères
+FixNamespaceComments: true
+NamespaceIndentation: All       # Indentation des namespaces
+
+# C++20 et +
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false

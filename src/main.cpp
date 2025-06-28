@@ -1,7 +1,9 @@
 #include "window.hh"
 #include "utils.hh"
-#include "chip8.hh"
+#include "core/Chip8.hh"
 #include <iostream>
+
+using namespace chip8;
 
 int main(int argc, char **argv)
 {

@@ -14,11 +14,12 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/utils.cpp
     src/window.cpp
-    src/chip8.cpp
+    src/core/Timers.cpp
+    src/core/Chip8.cpp
 )
 
 include_directories(${SDL2_INCLUDE_DIRS})
-include_directories(${PROJECT_NAME_INCLUDE_DIRS})
+include_directories(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GL_SILENCE_DEPRECATION)
@@ -33,7 +34,8 @@ add_executable(tests_all
     tests/test_main.cpp
     tests/test_chip8.cpp
     src/window.cpp
-    src/chip8.cpp
+    src/core/Timers.cpp
+    src/core/Chip8.cpp
     src/utils.cpp
 )
 
