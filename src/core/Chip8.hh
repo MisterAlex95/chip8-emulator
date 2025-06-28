@@ -13,8 +13,6 @@ namespace chip8
     class Chip8
     {
        public:
-        Chip8();
-
         void initialize();
         void loadFontset();
         bool loadROM(const char* filename);
@@ -57,7 +55,7 @@ namespace chip8
         std::array<uint16_t, chip8::config::STACK_SIZE> _stack;  // Stack for subroutine calls
         uint8_t                                         _stack_pointer;  // Stack pointer
 
-        chip8::Timers* _timer;
+        chip8::Timers _timer;
 
         // Input
         std::array<uint8_t, chip8::config::KEY_SIZE> _keys;  // Keypad

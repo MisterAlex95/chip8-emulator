@@ -16,6 +16,10 @@ add_executable(${PROJECT_NAME}
     src/window.cpp
     src/core/Timers.cpp
     src/core/Chip8.cpp
+    src/core/CPU.cpp
+    src/core/Display.cpp
+    src/core/Keyboard.cpp
+    src/core/Memory.cpp
 )
 
 include_directories(${SDL2_INCLUDE_DIRS})
@@ -36,6 +40,10 @@ add_executable(tests_all
     src/window.cpp
     src/core/Timers.cpp
     src/core/Chip8.cpp
+    src/core/CPU.cpp
+    src/core/Display.cpp
+    src/core/Keyboard.cpp
+    src/core/Memory.cpp
     src/utils.cpp
 )
 

@@ -8,11 +8,6 @@
 #include "Fontset.hh"
 #include "Timers.hh"
 
-chip8::Chip8::Chip8()
-{
-    _timer = new chip8::Timers();
-}
-
 void
 chip8::Chip8::initialize()
 {
@@ -165,7 +160,7 @@ chip8::Chip8::cycle()
     }
 
     // === UPDATE TIMERS ===
-    _timer->tick();
+    _timer.tick();
 }
 
 // === Getters / Setters  ===
@@ -257,5 +252,5 @@ chip8::Chip8::setStackAt(std::size_t index, uint16_t value)
 [[nodiscard]] const chip8::Timers&
 chip8::Chip8::getTimer() const
 {
-    return *_timer;
+    return _timer;
 }
