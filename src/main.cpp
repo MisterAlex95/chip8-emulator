@@ -13,6 +13,8 @@ int main(int argc, char **argv)
 
     Chip8 *chip8 = new Chip8();
     chip8->initialize();
+    chip8->loadFontset();
+
     bool isLoaded = chip8->loadROM(argv[1]);
 
     if (isLoaded)
