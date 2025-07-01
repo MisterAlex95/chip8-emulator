@@ -4,6 +4,7 @@
 #include <array>
 
 #include "Constants.hh"
+#include "Types.hh"
 
 namespace chip8
 {
@@ -20,7 +21,7 @@ namespace chip8
         [[nodiscard]] const uint8_t* data() const;
 
        private:
-        std::array<uint8_t, chip8::config::MEMORY_SIZE> _memory;  // 4K memory
+        MemoryArray _memory;  // 4K memory
     };
 
 }  // namespace chip8

@@ -1,9 +1,6 @@
 #ifndef CHIP8_CONSTANTS_HH
 #define CHIP8_CONSTANTS_HH
 
-#include <cstddef>
-#include <cstdint>
-
 namespace chip8
 {
 

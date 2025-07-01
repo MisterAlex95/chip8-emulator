@@ -16,21 +16,20 @@ namespace chip8
        public:
         explicit CPU(Memory& mem, Display& disp, Timers& timers, Keyboard& keys);
 
-        void cycle();  // une instruction
+        void cycle();
 
        private:
-        // Références vers les modules
         Memory&   _memory;
         Display&  _display;
         Timers&   _timers;
         Keyboard& _keyboard;
 
         // Registres internes
-        std::array<uint8_t, config::REGISTER_SIZE> _V{};
-        uint16_t                                   _I  = 0;
-        uint16_t                                   _PC = config::ROM_START_ADDRESS;
-        std::array<uint16_t, config::STACK_SIZE>   _stack{};
-        uint8_t                                    _SP = 0;
+        RegisterArray _registers{};
+        uint16_t      _index_register  = 0;
+        uint16_t      _program_counter = config::ROM_START_ADDRESS;
+        StackArray    _stack{};
+        uint8_t       _stack_pointer = 0;
 
         // Méthodes utilitaires internes
         uint16_t fetchOpcode() const;
@@ -38,7 +37,9 @@ namespace chip8
 
         // Décodeurs spécialisés (optionnel)
         void decode0(uint16_t opcode);
+        void decode1(uint16_t opcode);
         void decode8(uint16_t opcode);
+        void decodeD(uint16_t opcode);
         void decodeE(uint16_t opcode);
         void decodeF(uint16_t opcode);
     };

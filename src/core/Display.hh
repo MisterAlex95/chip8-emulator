@@ -4,6 +4,7 @@
 #include <array>
 
 #include "Constants.hh"
+#include "Types.hh"
 
 namespace chip8
 {
@@ -20,9 +21,7 @@ namespace chip8
         [[nodiscard]] bool isPixelEnable(int x, int y) const;
 
        private:
-        std::array<bool, chip8::config::DISPLAY_Y * chip8::config::DISPLAY_X>
-            _display;  // 64x32 pixel display
-
+        DisplayArray _display;  // 64x32 pixel display
     };
 
 }  // namespace chip8

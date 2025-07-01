@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include "Types.hh"
+
 namespace chip8
 {
     class Keyboard
@@ -11,6 +13,7 @@ namespace chip8
         Keyboard();
 
        private:
+        KeypadArray _keys;  // Keypad
     };
 
 }  // namespace chip8
