@@ -1,6 +1,27 @@
 {
     "tasks": [
-        // add cmake 
+        {
+            "type": "cmake",
+            "label": "CMake: build",
+            "command": "build",
+            "targets": [
+                "all"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Tâche build de modèle CMake"
+        },
+        {
+            "type": "make",
+            "label": "make: build",
+            "command": "build",
+            "targets": [
+                "all"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Tâche build de modèle make"
+        }
     ],
     "version": "2.0.0"
 }

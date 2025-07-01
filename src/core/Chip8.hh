@@ -1,4 +1,3 @@
-// Chip8.hh
 #ifndef Chip8_HH
 #define Chip8_HH
 
@@ -6,6 +5,8 @@
 
 #include "Constants.hh"
 #include "Timers.hh"
+#include "Memory.hh"
+#include "Display.hh"
 
 namespace chip8
 {
@@ -13,19 +14,11 @@ namespace chip8
     class Chip8
     {
        public:
+        Chip8();
         void initialize();
         void loadFontset();
         bool loadROM(const char* filename);
         void cycle();
-
-        // Display
-        [[nodiscard]] const std::array<bool, chip8::config::DISPLAY_Y * chip8::config::DISPLAY_X>&
-             getDisplay() const;
-        void setDisplayAt(std::size_t index, bool value);
-
-        // Memory
-        [[nodiscard]] const std::array<uint8_t, chip8::config::MEMORY_SIZE>& getMemory() const;
-        void setMemoryAt(std::size_t index, uint8_t value);
 
         // Registers
         [[nodiscard]] const std::array<uint8_t, chip8::config::REGISTER_SIZE>& getRegisters() const;
@@ -39,13 +32,11 @@ namespace chip8
         [[nodiscard]] const std::array<uint16_t, chip8::config::STACK_SIZE>& getStack() const;
         void setStackAt(std::size_t index, uint16_t value);
 
-        // Timers
+        [[nodiscard]] const chip8::Display& getDisplay() const;
         [[nodiscard]] const chip8::Timers& getTimer() const;
+        [[nodiscard]] const chip8::Memory& getMemory() const;
 
        private:
-        // Memory
-        std::array<uint8_t, chip8::config::MEMORY_SIZE> _memory;  // 4K memory
-
         // Registers
         std::array<uint8_t, chip8::config::REGISTER_SIZE> _registers;        // 16 registers
         uint16_t                                          _index_register;   // Index register
@@ -56,13 +47,11 @@ namespace chip8
         uint8_t                                         _stack_pointer;  // Stack pointer
 
         chip8::Timers _timer;
+        chip8::Display _display;
+        chip8::Memory _memory;
 
         // Input
         std::array<uint8_t, chip8::config::KEY_SIZE> _keys;  // Keypad
-
-        // Display
-        std::array<bool, chip8::config::DISPLAY_Y * chip8::config::DISPLAY_X>
-            _display;  // 64x32 pixel display
     };
 }  // namespace chip8
 

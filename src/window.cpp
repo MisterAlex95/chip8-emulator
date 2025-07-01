@@ -24,7 +24,8 @@ bool init(SDL_Window *&window, SDL_Renderer *&renderer, const char *window_title
 
 void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
 {
-    const int FPS = 60;
+    (void)window;
+    const int FPS        = 60;
     const int frameDelay = 1000 / FPS; // ≈ 16 ms
     const int pixelSize = 10;          // Taille d’un pixel CHIP-8 à l’écran
 
@@ -54,7 +55,7 @@ void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
         {
             for (int x = 0; x < 64; ++x)
             {
-                if (chip8->getDisplay()[y * 64 + x]) // pixel allumé ?
+                if (chip8->getDisplay().isPixelEnable(y, x)) // pixel allumé ?
                 {
                     SDL_Rect rect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Blanc
@@ -76,6 +77,7 @@ void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
 
 void cleanup(SDL_Window *window, SDL_Renderer *renderer)
 {
+    (void)renderer;
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

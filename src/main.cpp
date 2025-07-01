@@ -7,6 +7,10 @@ using namespace chip8;
 
 int main(int argc, char **argv)
 {
+    #ifdef DEV_MODE
+        std::cout << "[DEBUG MODE] with " << argc << " arguments\n";
+    #endif
+
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer;
 

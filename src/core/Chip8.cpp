@@ -8,10 +8,11 @@
 #include "Fontset.hh"
 #include "Timers.hh"
 
+chip8::Chip8::Chip8() {}
+
 void
 chip8::Chip8::initialize()
 {
-    _memory.fill(0);
     _registers.fill(0);
     _index_register  = 0;
     _program_counter = chip8::config::ROM_START_ADDRESS;
@@ -20,7 +21,6 @@ chip8::Chip8::initialize()
     _stack_pointer = 0;
 
     _keys.fill(0);
-    _display.fill(false);
 }
 
 void
@@ -28,7 +28,7 @@ chip8::Chip8::loadFontset()
 {
     for (size_t i = 0; i < chip8::CHIP8_FONTSET_SIZE; ++i)
     {
-        _memory[chip8::config::FONTSET_START_ADDRESS + i] = chip8::CHIP8_FONTSET[i];
+        _memory.setMemoryAt(chip8::config::FONTSET_START_ADDRESS + i, chip8::CHIP8_FONTSET[i]);
     }
 }
 
@@ -60,13 +60,13 @@ chip8::Chip8::loadROM(const char* filename)
         return false;
     }
 
-    if (chip8::config::ROM_START_ADDRESS + size > _memory.size())
+    if (chip8::config::ROM_START_ADDRESS + size > _memory.getSize())
     {
         std::cerr << "[Error] ROM size exceeds memory capacity\n";
         return false;
     }
 
-    if (!romFile.read(reinterpret_cast<char*>(&_memory[chip8::config::ROM_START_ADDRESS]), size))
+    if (!romFile.read(reinterpret_cast<char*>(_memory.data() + chip8::config::ROM_START_ADDRESS), size))
     {
         std::cerr << "[Error] Failed to read ROM into memory\n";
         return false;
@@ -80,14 +80,14 @@ void
 chip8::Chip8::cycle()
 {
     // === FETCH ===
-    if (_program_counter + 1 >= _memory.size())
+    if (_program_counter + 1 >= _memory.getSize())
     {
         std::cerr << "[Error] Program counter out of memory bounds\n";
         return;
     }
 
     const uint16_t opcode =
-        static_cast<uint16_t>(_memory[_program_counter] << 8) | _memory[_program_counter + 1];
+        static_cast<uint16_t>(_memory.getMemoryAt(_program_counter) << 8) | _memory.getMemoryAt(_program_counter + 1);
     _program_counter += 2;  // avance par défaut
 
     // === DECODE & EXECUTE ===
@@ -97,7 +97,7 @@ chip8::Chip8::cycle()
             switch (opcode & 0x00FF)
             {
                 case 0x00E0:  // CLS
-                    _display.fill(false);
+                    _display.clean();
                     break;
 
                 case 0x00EE:  // RET
@@ -134,7 +134,7 @@ chip8::Chip8::cycle()
 
             for (uint8_t row = 0; row < height; ++row)
             {
-                const uint8_t spriteByte = _memory[_index_register + row];
+                const uint8_t spriteByte = _memory.getMemoryAt(_index_register + row);
                 for (uint8_t col = 0; col < 8; ++col)
                 {
                     const bool spritePixel = (spriteByte & (0x80 >> col)) != 0;
@@ -142,12 +142,11 @@ chip8::Chip8::cycle()
                     {
                         const uint16_t pixelX = (_registers[x] + col) % chip8::config::DISPLAY_X;
                         const uint16_t pixelY = (_registers[y] + row) % chip8::config::DISPLAY_Y;
-                        const uint16_t pixelIndex = pixelY * chip8::config::DISPLAY_X + pixelX;
 
-                        if (_display[pixelIndex])
+                        if (_display.isPixelEnable(pixelY, pixelX))
                             _registers[0xF] = 1;
 
-                        _display[pixelIndex] ^= true;
+                        _display.setDisplayAt(pixelY, pixelX, _display.isPixelEnable(pixelY, pixelX) ^ true) ;
                     }
                 }
             }
@@ -164,36 +163,6 @@ chip8::Chip8::cycle()
 }
 
 // === Getters / Setters  ===
-
-[[nodiscard]] const std::array<bool, chip8::config::DISPLAY_X * chip8::config::DISPLAY_Y>&
-chip8::Chip8::getDisplay() const
-{
-    return _display;
-}
-
-void
-chip8::Chip8::setDisplayAt(std::size_t index, bool value)
-{
-    if (index < _display.size())
-    {
-        _display[index] = value;
-    }
-}
-
-[[nodiscard]] const std::array<uint8_t, chip8::config::MEMORY_SIZE>&
-chip8::Chip8::getMemory() const
-{
-    return _memory;
-}
-
-void
-chip8::Chip8::setMemoryAt(std::size_t index, uint8_t value)
-{
-    if (index < _memory.size())
-    {
-        _memory[index] = value;
-    }
-}
 
 [[nodiscard]] const std::array<uint8_t, chip8::config::REGISTER_SIZE>&
 chip8::Chip8::getRegisters() const
@@ -254,3 +223,16 @@ chip8::Chip8::getTimer() const
 {
     return _timer;
 }
+
+[[nodiscard]] const chip8::Display&
+chip8::Chip8::getDisplay() const
+{
+    return _display;
+}
+
+[[nodiscard]] const chip8::Memory& 
+chip8::Chip8::getMemory() const
+{
+    return _memory;
+}
+
