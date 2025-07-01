@@ -7,7 +7,7 @@
 #include "Timers.hh"
 
 chip8::Chip8::Chip8(chip8::IKeyboard* keyboard)
-    : _keyboard(keyboard), _cpu(_memory, _display, _timer, _keyboard)
+    : _cpu(_memory, _display, _timer, keyboard), _keyboard(keyboard)
 {
 }
 

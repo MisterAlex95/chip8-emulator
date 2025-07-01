@@ -24,14 +24,12 @@ namespace chip8
         Timers&    _timers;
         IKeyboard* _keyboard;
 
-        // Registres internes
         RegisterArray _registers{};
         uint16_t      _index_register  = 0;
         uint16_t      _program_counter = config::ROM_START_ADDRESS;
         StackArray    _stack{};
         uint8_t       _stack_pointer = 0;
 
-        // Méthodes utilitaires internes
         uint16_t fetchOpcode() const;
         void     executeOpcode(uint16_t opcode);
 

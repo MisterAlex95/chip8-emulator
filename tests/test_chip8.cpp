@@ -6,14 +6,16 @@ using namespace chip8;
 
 TEST(Chip8Test, InitializeResetsState)
 {
-    Chip8 chip;
-    chip.initialize();
+    auto* keyboard = new Keyboard();
+    Chip8 chip(keyboard);
 
     // Vérifie que la mémoire, les registres, le PC, la pile, les timers et l'affichage sont bien
     // réinitialisés
-    for (std::size_t i = 0; i < chip8::config::MEMORY_SIZE; ++i) EXPECT_EQ(chip.getMemory().getMemoryAt(i), 0);
+    for (std::size_t i = 0; i < chip8::config::MEMORY_SIZE; ++i)
+        EXPECT_EQ(chip.getMemory().getMemoryAt(i), 0);
 
-    for (std::size_t i = 0; i < chip8::config::REGISTER_SIZE; ++i) EXPECT_EQ(chip.getRegisters()[i], 0);
+    for (std::size_t i = 0; i < chip8::config::REGISTER_SIZE; ++i)
+        EXPECT_EQ(chip.getRegisters()[i], 0);
 
     EXPECT_EQ(chip.getRegisterIndex(), 0);
     EXPECT_EQ(chip.getRegisterProgramCounter(), chip8::config::ROM_START_ADDRESS);

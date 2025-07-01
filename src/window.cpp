@@ -41,7 +41,7 @@ mainLoop(SDL_Window* window, SDL_Renderer* renderer, chip8::Chip8* chip8)
                 running = false;
 
             // Gestion des touches
-            chip8->getKeyboard();
+            // chip8->getKeyboard();
         }
 
         // 2. Faire un cycle CPU

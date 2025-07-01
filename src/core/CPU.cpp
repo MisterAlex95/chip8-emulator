@@ -11,16 +11,7 @@ chip8::CPU::CPU(Memory& mem, Display& disp, Timers& timers, chip8::IKeyboard* ke
 void
 chip8::CPU::cycle()
 {
-    // === FETCH ===
-    if (this->_program_counter + 1 >= _memory.getSize())
-    {
-        std::cerr << "[Error] Program counter out of memory bounds\n";
-        return;
-    }
-
-    const uint16_t opcode =
-        static_cast<uint16_t>(_memory.getMemoryAt(this->_program_counter) << 8) |
-        _memory.getMemoryAt(this->_program_counter + 1);
+    auto opcode = fetchOpcode();
     this->_program_counter += 2;
 
     switch (opcode & 0xF000)
@@ -45,6 +36,23 @@ chip8::CPU::cycle()
             std::cerr << "[Warning] Unhandled opcode: 0x" << std::hex << opcode << std::dec << "\n";
             break;
     }
+
+    this->_timers.tick();
+}
+
+uint16_t
+chip8::CPU::fetchOpcode() const
+{
+    if (this->_program_counter + 1 >= _memory.getSize())
+    {
+        std::cerr << "[Error] Program counter out of memory bounds\n";
+        throw std::runtime_error("[Error] Program counter out of memory bounds");
+    }
+
+    const uint16_t opcode =
+        static_cast<uint16_t>(_memory.getMemoryAt(this->_program_counter) << 8) |
+        _memory.getMemoryAt(this->_program_counter + 1);
+    return opcode;
 }
 
 void
