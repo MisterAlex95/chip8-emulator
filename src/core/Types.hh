@@ -7,11 +7,13 @@
 
 namespace chip8
 {
+    enum class Key : std::uint8_t;
+
     using MemoryArray   = std::array<std::uint8_t, config::MEMORY_SIZE>;
     using RegisterArray = std::array<std::uint8_t, config::REGISTER_SIZE>;
     using StackArray    = std::array<std::uint16_t, config::STACK_SIZE>;
     using DisplayArray  = std::array<bool, config::DISPLAY_X * config::DISPLAY_Y>;
-    using KeypadArray   = std::array<std::uint8_t, 16>;
+    using KeypadArray   = std::array<Key, 16>;
 
     enum class Key : std::uint8_t
     {

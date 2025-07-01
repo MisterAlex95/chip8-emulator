@@ -1,4 +1,5 @@
 #include "core/Chip8.hh"
+#include "platform/SDL/SDL_Keyboard.hh"
 #include "utils.hh"
 #include "window.hh"
 
@@ -21,7 +22,9 @@ main(int argc, char** argv)
     if (!init(window, renderer, "chip8 emulator"))
         sdlFail("Erreur d'initialisation SDL/OpenGL");
 
-    auto* chip8 = new Chip8();
+    auto* keyboard = new SDL::SDL_Keyboard();
+    auto* chip8    = new Chip8(keyboard);
+
     chip8->loadFontSet();
 
     if (chip8->loadROM(argv[1]))

@@ -1,21 +1,29 @@
-#ifndef KEYBOARD_HH
-#define KEYBOARD_HH
+#ifndef CHIP8_KEYBOARD_HH
+#define CHIP8_KEYBOARD_HH
 
+#include "interfaces//IKeyboard.hh"
+
+#include <array>
 #include <cstdint>
-
-#include "Types.hh"
 
 namespace chip8
 {
-    class Keyboard
+
+    class Keyboard final : public IKeyboard
     {
        public:
         Keyboard();
+        ~Keyboard() override = default;
+
+        void                                      setKeyState(uint8_t key, bool pressed) override;
+        [[nodiscard]] bool                        isKeyPressed(uint8_t key) const override;
+        [[nodiscard]] const std::array<bool, 16>& getKeys() const override;
+        void                                      reset() override;
 
        private:
-        KeypadArray _keys;  // Keypad
+        std::array<bool, 16> _keys{};
     };
 
 }  // namespace chip8
 
-#endif  // KEYBOARD_HH
+#endif  // CHIP8_KEYBOARD_HH

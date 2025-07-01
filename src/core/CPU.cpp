@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-chip8::CPU::CPU(Memory& mem, Display& disp, Timers& timers, Keyboard& keys)
+chip8::CPU::CPU(Memory& mem, Display& disp, Timers& timers, chip8::IKeyboard* keys)
     : _memory(mem), _display(disp), _timers(timers), _keyboard(keys)
 {
 }
@@ -18,8 +18,9 @@ chip8::CPU::cycle()
         return;
     }
 
-    const uint16_t opcode = static_cast<uint16_t>(_memory.getMemoryAt(this->_program_counter) << 8) |
-                            _memory.getMemoryAt(this->_program_counter + 1);
+    const uint16_t opcode =
+        static_cast<uint16_t>(_memory.getMemoryAt(this->_program_counter) << 8) |
+        _memory.getMemoryAt(this->_program_counter + 1);
     this->_program_counter += 2;
 
     switch (opcode & 0xF000)
@@ -75,7 +76,7 @@ void
 chip8::CPU::decode1(uint16_t opcode)
 {
     const uint16_t address = opcode & 0x0FFF;
-    this->_program_counter              = address;
+    this->_program_counter = address;
 }
 
 void

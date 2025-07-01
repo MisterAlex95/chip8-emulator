@@ -2,16 +2,14 @@
 #include "core/Chip8.hh"
 #include <OpenGL/gl.h>
 
-bool init(SDL_Window *&window, SDL_Renderer *&renderer, const char *window_title)
+bool
+init(SDL_Window*& window, SDL_Renderer*& renderer, const char* window_title)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return false;
 
-    window = SDL_CreateWindow(window_title ? window_title : "SDL Window",
-                              SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED,
-                              680, 480,
-                              0);
+    window = SDL_CreateWindow(window_title ? window_title : "SDL Window", SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED, 680, 480, 0);
     if (!window)
         return false;
 
@@ -22,12 +20,12 @@ bool init(SDL_Window *&window, SDL_Renderer *&renderer, const char *window_title
     return true;
 }
 
-void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
+void
+mainLoop(SDL_Window* window, SDL_Renderer* renderer, chip8::Chip8* chip8)
 {
-    (void)window;
     const int FPS        = 60;
-    const int frameDelay = 1000 / FPS; // ≈ 16 ms
-    const int pixelSize = 10;          // Taille d’un pixel CHIP-8 à l’écran
+    const int frameDelay = 1000 / FPS;  // ≈ 16 ms
+    const int pixelSize  = 10;          // Taille d’un pixel CHIP-8 à l’écran
 
     bool running = true;
     while (running)
@@ -41,24 +39,26 @@ void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
         {
             if (event.type == SDL_QUIT)
                 running = false;
-            // TODO: gérer les touches plus tard
+
+            // Gestion des touches
+            chip8->getKeyboard();
         }
 
         // 2. Faire un cycle CPU
         chip8->cycle();
 
         // 3. Dessiner l’écran (plus tard, avec l’opcode DRW)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Fond noir
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Fond noir
         SDL_RenderClear(renderer);
 
         for (int y = 0; y < 32; ++y)
         {
             for (int x = 0; x < 64; ++x)
             {
-                if (chip8->getDisplay().isPixelEnable(y, x)) // pixel allumé ?
+                if (chip8->getDisplay().isPixelEnable(y, x))  // pixel allumé ?
                 {
                     SDL_Rect rect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
-                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Blanc
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
                     SDL_RenderFillRect(renderer, &rect);
                 }
             }
@@ -75,7 +75,8 @@ void mainLoop(SDL_Window *window, SDL_Renderer *renderer, chip8::Chip8 *chip8)
     }
 }
 
-void cleanup(SDL_Window *window, SDL_Renderer *renderer)
+void
+cleanup(SDL_Window* window, SDL_Renderer* renderer)
 {
     (void)renderer;
     SDL_DestroyWindow(window);

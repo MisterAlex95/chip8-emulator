@@ -1,5 +1,3 @@
-#include <array>
-#include <cstdint>
 #include <fstream>
 #include <iostream>
 
@@ -8,7 +6,10 @@
 #include "Fontset.hh"
 #include "Timers.hh"
 
-chip8::Chip8::Chip8() : _cpu(_memory, _display, _timer, _keyboard) {}
+chip8::Chip8::Chip8(chip8::IKeyboard* keyboard)
+    : _keyboard(keyboard), _cpu(_memory, _display, _timer, _keyboard)
+{
+}
 
 void
 chip8::Chip8::loadFontSet()
@@ -94,8 +95,8 @@ chip8::Chip8::getCPU() const
     return _cpu;
 }
 
-[[nodiscard]] const chip8::Keyboard&
+[[nodiscard]] const chip8::IKeyboard&
 chip8::Chip8::getKeyboard() const
 {
-    return _keyboard;
+    return *_keyboard;
 }
