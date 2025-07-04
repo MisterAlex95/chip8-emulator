@@ -38,6 +38,17 @@ add_executable(${PROJECT_NAME}
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp
         src/platform/SDL/SDL_Keyboard.hh
+        src/core/Event.hh
+        src/interfaces/IWindow.hh
+        src/interfaces/IDisplay.hh
+        src/interfaces/ITimer.hh
+        src/interfaces/IInput.hh
+        src/platform/SDL/SDL_Input.cpp
+        src/platform/SDL/SDL_Input.hh
+        src/platform/SDL/SDL_Display.cpp
+        src/platform/SDL/SDL_Display.hh
+        src/platform/SDL/SDL_Timer.cpp
+        src/platform/SDL/SDL_Timer.hh
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -72,6 +83,12 @@ add_executable(tests_all
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp
         src/platform/SDL/SDL_Keyboard.hh
+        src/core/Event.hh
+        src/interfaces/IDisplay.hh
+        src/platform/SDL/SDL_Input.cpp
+        src/platform/SDL/SDL_Input.hh
+        src/platform/SDL/SDL_Display.cpp
+        src/platform/SDL/SDL_Display.hh
 )
 
 target_include_directories(tests_all PRIVATE
@@ -97,6 +114,12 @@ add_executable(tests_utils_death
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp
         src/platform/SDL/SDL_Keyboard.hh
+        src/core/Event.hh
+        src/interfaces/IDisplay.hh
+        src/platform/SDL/SDL_Input.cpp
+        src/platform/SDL/SDL_Input.hh
+        src/platform/SDL/SDL_Display.cpp
+        src/platform/SDL/SDL_Display.hh
 )
 
 target_include_directories(tests_utils_death PRIVATE

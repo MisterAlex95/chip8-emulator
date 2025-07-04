@@ -1,11 +1,10 @@
 #pragma once
 
 #include "core/Chip8.hh"
-#include <SDL2/SDL.h>
 
-bool
-init(SDL_Window*& window, SDL_Renderer*& renderer, const char* window_title);
+#include "interfaces/IDisplay.hh"
+#include "interfaces/IInput.hh"
+#include "interfaces/ITimer.hh"
+
 void
-mainLoop(SDL_Window* window, SDL_Renderer* renderer, chip8::Chip8* chip8);
-void
-cleanup(SDL_Window* window, SDL_Renderer* renderer);
+mainLoop(chip8::Chip8* chip8, IInput& input, IDisplay& display, ITimer& timer);

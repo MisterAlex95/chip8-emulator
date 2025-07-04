@@ -12,14 +12,16 @@ namespace SDL
     {
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
         {
-            bool pressed = (event.type == SDL_KEYDOWN);
-            auto mapped  = mapSDLKey(event.key.keysym.sym);
+            const bool pressed = (event.type == SDL_KEYDOWN);
+            const auto mapped  = mapSDLKey(event.key.keysym.sym);
             if (mapped.has_value())
             {
                 setKeyState(mapped.value(), pressed);
             }
         }
     }
+
+    void SDL_Keyboard::handleEvent(const chip8::Event& event) {}
 
     void SDL_Keyboard::setKeyState(const uint8_t key, const bool pressed)
     {

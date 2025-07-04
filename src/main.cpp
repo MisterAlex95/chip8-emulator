@@ -1,6 +1,8 @@
 #include "core/Chip8.hh"
-#include "platform/SDL/SDL_Keyboard.hh"
-#include "utils.hh"
+#include "interfaces/IDisplay.hh"
+#include "platform/SDL/SDL_Display.hh"
+#include "platform/SDL/SDL_Input.hh"
+#include "platform/SDL/SDL_Timer.hh"
 #include "window.hh"
 
 #ifdef DEV_MODE
@@ -16,23 +18,19 @@ main(int argc, char** argv)
     std::cout << "[DEBUG MODE] with " << argc << " arguments\n";
 #endif
 
-    SDL_Window*   window = nullptr;
-    SDL_Renderer* renderer;
-
-    if (!init(window, renderer, "chip8 emulator"))
-        sdlFail("Erreur d'initialisation SDL/OpenGL");
-
-    auto* keyboard = new SDL::SDL_Keyboard();
+    auto  display  = SDL::SDL_Display(10);
+    auto  input    = SDL::SDL_Input();
+    auto  timer    = SDL::SDL_Timer();
+    auto  keyboard = new chip8::Keyboard();
     auto* chip8    = new Chip8(keyboard);
 
     chip8->loadFontSet();
 
     if (chip8->loadROM(argv[1]))
     {
-        mainLoop(window, renderer, chip8);
+        (void)display;
+        mainLoop(chip8, input, display, timer);
     }
-
-    cleanup(window, renderer);
 
     return 0;
 }

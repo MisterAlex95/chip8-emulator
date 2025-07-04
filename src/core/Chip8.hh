@@ -21,7 +21,7 @@ namespace chip8
         [[nodiscard]] const chip8::Display&   getDisplay() const;
         [[nodiscard]] const chip8::Timers&    getTimer() const;
         [[nodiscard]] const chip8::Memory&    getMemory() const;
-        [[nodiscard]] const chip8::IKeyboard& getKeyboard() const;
+        [[nodiscard]] const chip8::IKeyboard* getKeyboard() const;
 
        private:
         CPU               _cpu;

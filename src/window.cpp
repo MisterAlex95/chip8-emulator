@@ -1,84 +1,48 @@
 #include "window.hh"
 #include "core/Chip8.hh"
-#include <OpenGL/gl.h>
-
-bool
-init(SDL_Window*& window, SDL_Renderer*& renderer, const char* window_title)
-{
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        return false;
-
-    window = SDL_CreateWindow(window_title ? window_title : "SDL Window", SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED, 680, 480, 0);
-    if (!window)
-        return false;
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer)
-        return false;
-
-    return true;
-}
+#include "interfaces/IDisplay.hh"
+#include "interfaces/IInput.hh"
+#include "interfaces/ITimer.hh"
 
 void
-mainLoop(SDL_Window* window, SDL_Renderer* renderer, chip8::Chip8* chip8)
+mainLoop(chip8::Chip8* chip8, IInput& input, IDisplay& display, ITimer& timer)
 {
     const int FPS        = 60;
     const int frameDelay = 1000 / FPS;  // ≈ 16 ms
-    const int pixelSize  = 10;          // Taille d’un pixel CHIP-8 à l’écran
 
     bool running = true;
     while (running)
     {
-        uint32_t frameStart = SDL_GetTicks();
+        uint32_t frameStart = timer.getTicks();
 
         // 1. Gérer les événements SDL (fermeture de fenêtre, clavier, etc.)
-        SDL_Event event;
-
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-                running = false;
-
-            // Gestion des touches
-            // chip8->getKeyboard();
-        }
+        auto keyboard = chip8->getKeyboard();
+        input.pollEvents(keyboard, running);
 
         // 2. Faire un cycle CPU
         chip8->cycle();
 
         // 3. Dessiner l’écran (plus tard, avec l’opcode DRW)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Fond noir
-        SDL_RenderClear(renderer);
+        display.clear();
 
-        for (int y = 0; y < 32; ++y)
+        for (int y = 0; y < chip8::config::DISPLAY_Y; ++y)
         {
-            for (int x = 0; x < 64; ++x)
+            for (int x = 0; x < chip8::config::DISPLAY_X; ++x)
             {
                 if (chip8->getDisplay().isPixelEnable(y, x))  // pixel allumé ?
                 {
-                    SDL_Rect rect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
-                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
-                    SDL_RenderFillRect(renderer, &rect);
+                    display.drawPixel(x, y, true);
                 }
             }
         }
 
-        SDL_RenderPresent(renderer);
+        display.present();
 
         // 4. Attendre pour respecter 60 FPS
-        uint32_t frameTime = SDL_GetTicks() - frameStart;
+        uint32_t frameTime = timer.getTicks() - frameStart;
         if (frameDelay > frameTime)
         {
-            SDL_Delay(frameDelay - frameTime);
+            timer.waitUntilNextFrame(frameDelay - frameTime);
         }
     }
-}
-
-void
-cleanup(SDL_Window* window, SDL_Renderer* renderer)
-{
-    (void)renderer;
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }

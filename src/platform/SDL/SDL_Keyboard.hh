@@ -13,10 +13,9 @@ namespace SDL
         SDL_Keyboard();
         ~SDL_Keyboard() override = default;
 
-        void handleEvent(const SDL_Event& event);
-
-        void setKeyState(uint8_t key, bool pressed) override;
-
+        void                                      handleEvent(const SDL_Event& event);
+        void                                      handleEvent(const chip8::Event& event);
+        void                                      setKeyState(uint8_t key, bool pressed) override;
         [[nodiscard]] bool                        isKeyPressed(uint8_t key) const override;
         [[nodiscard]] const std::array<bool, 16>& getKeys() const override;
 

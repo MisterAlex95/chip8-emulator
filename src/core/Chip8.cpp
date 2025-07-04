@@ -95,8 +95,8 @@ chip8::Chip8::getCPU() const
     return _cpu;
 }
 
-[[nodiscard]] const chip8::IKeyboard&
+[[nodiscard]] const chip8::IKeyboard*
 chip8::Chip8::getKeyboard() const
 {
-    return *_keyboard;
+    return _keyboard;
 }
