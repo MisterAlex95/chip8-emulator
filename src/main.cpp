@@ -9,8 +9,6 @@
 #include <iostream>
 #endif
 
-using namespace chip8;
-
 int
 main(int argc, char** argv)
 {
@@ -22,13 +20,12 @@ main(int argc, char** argv)
     auto  input    = SDL::SDL_Input();
     auto  timer    = SDL::SDL_Timer();
     auto  keyboard = new chip8::Keyboard();
-    auto* chip8    = new Chip8(keyboard);
+    auto* chip8    = new chip8::Chip8(keyboard);
 
     chip8->loadFontSet();
 
     if (chip8->loadROM(argv[1]))
     {
-        (void)display;
         mainLoop(chip8, input, display, timer);
     }
 

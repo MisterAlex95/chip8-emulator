@@ -1,5 +1,4 @@
 #include <array>
-#include <iostream>
 
 #include "Display.hh"
 #include "Constants.hh"
@@ -9,7 +8,7 @@ chip8::Display::Display() {
 }
 
 [[nodiscard]] bool
-chip8::Display::isPixelEnable(int x, int y) const
+chip8::Display::isPixelEnable(const int x, const int y) const
 {
     return _display[y * chip8::config::DISPLAY_X + x] == true;
 }

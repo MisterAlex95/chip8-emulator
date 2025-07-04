@@ -4,8 +4,7 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 
-#include "utils.hh"
-#include "window.hh"
+#include <iostream>
 
 namespace SDL
 {
@@ -55,5 +54,12 @@ namespace SDL
             return false;
 
         return true;
+    }
+
+    void SDL_Display::sdlFail(const char* message)
+    {
+        std::cerr << message << "\n";
+        SDL_Quit();
+        exit(-1);
     }
 }  // namespace SDL

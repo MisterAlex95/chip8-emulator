@@ -1,5 +1,5 @@
 #include "core/Keyboard.hh"
-#include <iostream>  // Pour debug éventuel
+#include <iostream>
 
 namespace chip8
 {
@@ -9,10 +9,7 @@ namespace chip8
         Keyboard::reset();
     }
 
-    void Keyboard::handleEvent(const Event& event)
-    {
-
-    }
+    void Keyboard::handleEvent(const Event& event) {}
 
     void Keyboard::setKeyState(uint8_t key, bool pressed)
     {

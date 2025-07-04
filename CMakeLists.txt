@@ -27,7 +27,6 @@ find_package(GTest REQUIRED)
 # === Exécutable principal ===
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/utils.cpp
         src/window.cpp
         src/core/Timers.cpp
         src/core/Chip8.cpp
@@ -73,7 +72,6 @@ add_executable(tests_all
         tests/test_main.cpp
         tests/test_chip8.cpp
         src/window.cpp
-        src/utils.cpp
         src/core/Timers.cpp
         src/core/Chip8.cpp
         src/core/CPU.cpp
@@ -110,7 +108,6 @@ add_test(NAME all_tests COMMAND tests_all)
 # === Tests spécifiques (utils death tests) ===
 add_executable(tests_utils_death
         tests/test_utils.cpp
-        src/utils.cpp
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp
         src/platform/SDL/SDL_Keyboard.hh

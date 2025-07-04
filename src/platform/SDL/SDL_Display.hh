@@ -19,6 +19,7 @@ namespace SDL
 
        private:
         bool init(SDL_Window*& window, SDL_Renderer*& renderer, const char* window_title);
+        void sdlFail(const char* message);
 
         int           pixelSize;
         SDL_Window*   window{};
