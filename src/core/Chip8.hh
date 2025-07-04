@@ -17,17 +17,17 @@ namespace chip8
         bool loadROM(const char* filename);
         void cycle();
 
-        [[nodiscard]] const chip8::CPU&       getCPU() const;
-        [[nodiscard]] const chip8::Display&   getDisplay() const;
-        [[nodiscard]] const chip8::Timers&    getTimer() const;
-        [[nodiscard]] const chip8::Memory&    getMemory() const;
+        [[nodiscard]] const chip8::CPU*       getCPU() const;
+        [[nodiscard]] const chip8::Display*   getDisplay() const;
+        [[nodiscard]] const chip8::Timers*    getTimer() const;
+        [[nodiscard]] const chip8::Memory*    getMemory() const;
         [[nodiscard]] const chip8::IKeyboard* getKeyboard() const;
 
        private:
-        CPU               _cpu;
-        chip8::Timers     _timer;
-        chip8::Display    _display;
-        chip8::Memory     _memory;
+        chip8::CPU*       _cpu;
+        chip8::Timers*    _timer;
+        chip8::Display*   _display;
+        chip8::Memory*    _memory;
         chip8::IKeyboard* _keyboard;
     };
 }  // namespace chip8

@@ -14,14 +14,15 @@ namespace chip8
     class CPU
     {
        public:
-        explicit CPU(Memory& mem, Display& disp, Timers& timers, chip8::IKeyboard* keys);
+        explicit CPU(chip8::Memory* mem, chip8::Display* disp, chip8::Timers* timers,
+                     chip8::IKeyboard* keys);
 
         void cycle();
 
        private:
-        Memory&    _memory;
-        Display&   _display;
-        Timers&    _timers;
+        Memory*    _memory;
+        Display*   _display;
+        Timers*    _timers;
         IKeyboard* _keyboard;
 
         RegisterArray _registers{};

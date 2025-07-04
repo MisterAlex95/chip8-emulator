@@ -3,7 +3,8 @@
 
 #include <iostream>
 
-chip8::CPU::CPU(Memory& mem, Display& disp, Timers& timers, chip8::IKeyboard* keys)
+chip8::CPU::CPU(chip8::Memory* mem, chip8::Display* disp, chip8::Timers* timers,
+                chip8::IKeyboard* keys)
     : _memory(mem), _display(disp), _timers(timers), _keyboard(keys)
 {
 }
@@ -37,21 +38,21 @@ chip8::CPU::cycle()
             break;
     }
 
-    this->_timers.tick();
+    this->_timers->tick();
 }
 
 uint16_t
 chip8::CPU::fetchOpcode() const
 {
-    if (this->_program_counter + 1 >= _memory.getSize())
+    if (this->_program_counter + 1 >= _memory->getSize())
     {
         std::cerr << "[Error] Program counter out of memory bounds\n";
         throw std::runtime_error("[Error] Program counter out of memory bounds");
     }
 
     const uint16_t opcode =
-        static_cast<uint16_t>(_memory.getMemoryAt(this->_program_counter) << 8) |
-        _memory.getMemoryAt(this->_program_counter + 1);
+        static_cast<uint16_t>(_memory->getMemoryAt(this->_program_counter) << 8) |
+        _memory->getMemoryAt(this->_program_counter + 1);
     return opcode;
 }
 
@@ -61,7 +62,7 @@ chip8::CPU::decode0(uint16_t opcode)
     switch (opcode & 0x00FF)
     {
         case 0x00E0:  // CLS
-            _display.clean();
+            _display->clean();
             break;
 
         case 0x00EE:  // RET
@@ -103,7 +104,7 @@ chip8::CPU::decodeD(uint16_t opcode)
 
     for (uint8_t row = 0; row < height; ++row)
     {
-        const uint8_t spriteByte = _memory.getMemoryAt(this->_index_register + row);
+        const uint8_t spriteByte = _memory->getMemoryAt(this->_index_register + row);
         for (uint8_t col = 0; col < 8; ++col)
         {
             const bool spritePixel = (spriteByte & (0x80 >> col)) != 0;
@@ -112,11 +113,11 @@ chip8::CPU::decodeD(uint16_t opcode)
                 const uint16_t pixelX = (this->_registers[x] + col) % chip8::config::DISPLAY_X;
                 const uint16_t pixelY = (this->_registers[y] + row) % chip8::config::DISPLAY_Y;
 
-                if (_display.isPixelEnable(pixelY, pixelX))
+                if (_display->isPixelEnable(pixelY, pixelX))
                     this->_registers[0xF] = 1;
 
-                _display.setDisplayAt(pixelY, pixelX,
-                                      _display.isPixelEnable(pixelY, pixelX) ^ true);
+                _display->setDisplayAt(pixelY, pixelX,
+                                       _display->isPixelEnable(pixelY, pixelX) ^ true);
             }
         }
     }

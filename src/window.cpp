@@ -30,7 +30,7 @@ mainLoop(chip8::Chip8* chip8, IInput& input, IDisplay& display, ITimer& timer)
         {
             for (int x = 0; x < chip8::config::DISPLAY_X; ++x)
             {
-                if (chip8->getDisplay().isPixelEnable(x, y))
+                if (chip8->getDisplay()->isPixelEnable(x, y))
                 {
                     display.drawPixel(x, y, true);
                 }

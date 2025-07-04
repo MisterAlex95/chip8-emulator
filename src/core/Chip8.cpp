@@ -7,8 +7,13 @@
 #include "Timers.hh"
 
 chip8::Chip8::Chip8(chip8::IKeyboard* keyboard)
-    : _cpu(_memory, _display, _timer, keyboard), _keyboard(keyboard)
 {
+    _keyboard = keyboard;
+    _memory   = new Memory();
+    _display  = new Display();
+    _timer    = new Timers();
+
+    _cpu = new CPU(_memory, _display, _timer, keyboard);
 }
 
 void
@@ -16,7 +21,7 @@ chip8::Chip8::loadFontSet()
 {
     for (size_t i = 0; i < chip8::CHIP8_FONTSET_SIZE; ++i)
     {
-        _memory.setMemoryAt(chip8::config::FONTSET_START_ADDRESS + i, chip8::CHIP8_FONTSET[i]);
+        _memory->setMemoryAt(chip8::config::FONTSET_START_ADDRESS + i, chip8::CHIP8_FONTSET[i]);
     }
 }
 
@@ -48,13 +53,13 @@ chip8::Chip8::loadROM(const char* filename)
         return false;
     }
 
-    if (chip8::config::ROM_START_ADDRESS + size > _memory.getSize())
+    if (chip8::config::ROM_START_ADDRESS + size > _memory->getSize())
     {
         std::cerr << "[Error] ROM size exceeds memory capacity\n";
         return false;
     }
 
-    if (!romFile.read(reinterpret_cast<char*>(_memory.data() + chip8::config::ROM_START_ADDRESS),
+    if (!romFile.read(reinterpret_cast<char*>(_memory->data() + chip8::config::ROM_START_ADDRESS),
                       size))
     {
         std::cerr << "[Error] Failed to read ROM into memory\n";
@@ -68,28 +73,28 @@ chip8::Chip8::loadROM(const char* filename)
 void
 chip8::Chip8::cycle()
 {
-    this->_cpu.cycle();
+    this->_cpu->cycle();
 }
 
-[[nodiscard]] const chip8::Timers&
+[[nodiscard]] const chip8::Timers*
 chip8::Chip8::getTimer() const
 {
     return _timer;
 }
 
-[[nodiscard]] const chip8::Display&
+[[nodiscard]] const chip8::Display*
 chip8::Chip8::getDisplay() const
 {
     return _display;
 }
 
-[[nodiscard]] const chip8::Memory&
+[[nodiscard]] const chip8::Memory*
 chip8::Chip8::getMemory() const
 {
     return _memory;
 }
 
-[[nodiscard]] const chip8::CPU&
+[[nodiscard]] const chip8::CPU*
 chip8::Chip8::getCPU() const
 {
     return _cpu;
