@@ -220,10 +220,10 @@ chip8::CPU::decodeD(uint16_t opcode)  // Dxyn
                 const uint16_t pixelX = (this->_registers[x] + col) % chip8::config::DISPLAY_X;
                 const uint16_t pixelY = (this->_registers[y] + row) % chip8::config::DISPLAY_Y;
 
-                bool pixelBefore = _display->isPixelEnable(pixelY, pixelX);
+                bool pixelBefore = _display->isPixelEnable(pixelX, pixelY);
                 bool pixelAfter  = pixelBefore ^ true;  // XOR toggle
 
-                _display->setDisplayAt(pixelY, pixelX, pixelAfter);
+                _display->setDisplayAt(pixelX, pixelY, pixelAfter);
 
                 if (pixelBefore && !pixelAfter)
                     this->_registers[0xF] = 1;
@@ -254,6 +254,7 @@ chip8::CPU::decodeE(uint16_t opcode)
             break;
         default:
             std::cerr << "[Warning] Unknown opcode: 0x" << std::hex << opcode << std::dec << "\n";
+            break;
     }
 }
 

@@ -26,7 +26,7 @@ namespace SDL
         if (static_cast<size_t>(key) <= this->_keys.size())
         {
             this->_keys[static_cast<size_t>(key)] = pressed;
-            printKeysState();
+            // printKeysState();
         }
     }
 

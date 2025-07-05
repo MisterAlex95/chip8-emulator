@@ -30,7 +30,7 @@ namespace SDL
         SDL_RenderClear(renderer);
     }
 
-    void SDL_Display::drawPixel(int y, int x, bool on)
+    void SDL_Display::drawPixel(int x, int y, bool on)
     {
         SDL_Rect rect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
