@@ -40,9 +40,11 @@ namespace chip8
         void decode2(uint16_t opcode);
         void decode3(uint16_t opcode);
         void decode4(uint16_t opcode);
+        void decode5(uint16_t opcode);
         void decode6(uint16_t opcode);
         void decode7(uint16_t opcode);
         void decode8(uint16_t opcode);
+        void decode9(uint16_t opcode);
         void decodeA(uint16_t opcode);
         void decodeD(uint16_t opcode);
         void decodeE(uint16_t opcode);

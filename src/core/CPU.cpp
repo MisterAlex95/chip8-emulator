@@ -49,6 +49,12 @@ chip8::CPU::cycle()
             break;
         }
 
+        case 0x5000:  //
+        {
+            this->decode5(opcode);
+            break;
+        }
+
         case 0x6000:
         {
             this->decode6(opcode);
@@ -58,6 +64,18 @@ chip8::CPU::cycle()
         case 0x7000:
         {
             this->decode7(opcode);
+            break;
+        }
+
+        case 0x8000:
+        {
+            this->decode8(opcode);
+            break;
+        }
+
+        case 0x9000:
+        {
+            this->decode9(opcode);
             break;
         }
 
@@ -173,6 +191,18 @@ chip8::CPU::decode4(uint16_t opcode)  // 4xkk
 }
 
 void
+chip8::CPU::decode5(uint16_t opcode)  // 5xy0
+{
+    const uint8_t x = (opcode & 0x0F00) >> 8;
+    const uint8_t y = opcode & 0x00F0 >> 4;
+
+    if (this->_registers[x] == y)
+    {
+        this->_program_counter += 2;
+    }
+}
+
+void
 chip8::CPU::decode6(uint16_t opcode)  // 6xkk
 {
     const uint8_t x     = (opcode & 0x0F00) >> 8;
@@ -191,6 +221,18 @@ chip8::CPU::decode7(uint16_t opcode)  // 7xkk
 void
 chip8::CPU::decode8(uint16_t opcode)
 {
+}
+
+void
+chip8::CPU::decode9(uint16_t opcode)  // 9xy0
+{
+    const uint8_t x = (opcode & 0x0F00) >> 8;
+    const uint8_t y = opcode & 0x00F0 >> 4;
+
+    if (this->_registers[x] != y)
+    {
+        this->_program_counter += 2;
+    }
 }
 
 void
@@ -270,6 +312,10 @@ chip8::CPU::decodeF(uint16_t opcode)
             _registers[x] = _timers->get_delay();
             break;
 
+        case 0x15:  // FX15: Set delay timer = Vx
+            _timers->set_delay(_registers[x]);
+            break;
+
         case 0x1E:  // FX1E: I = I + Vx
             _index_register += _registers[x];
             break;
@@ -294,6 +340,27 @@ chip8::CPU::decodeF(uint16_t opcode)
         case 0x55:  // FX55: Store V0 through Vx in memory starting at I
             for (int i = 0; i <= x; ++i) _memory->setMemoryAt(_index_register + i, _registers[i]);
             break;
+
+        case 0x0A:  // FX0A: Wait for key press, store in Vx
+        {
+            bool keyPressed = false;
+            for (uint8_t i = 0; i < 16; ++i)
+            {
+                if (_keyboard->isKeyPressed(i))
+                {
+                    _registers[x] = i;
+                    keyPressed    = true;
+                    break;
+                }
+            }
+
+            if (!keyPressed)
+            {
+                // Ne pas avancer le PC, on attend encore une touche
+                _program_counter -= 2;  // recule PC pour réexécuter l'instruction
+            }
+            break;
+        }
 
         default:
             std::cerr << "[Warning] Unhandled FX__ opcode: 0x" << std::hex << opcode << std::dec
