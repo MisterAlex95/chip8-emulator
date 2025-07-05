@@ -22,6 +22,7 @@ namespace chip8
         void                                      reset() override;
 
        private:
+        void                 printKeysState() const;
         std::array<bool, 16> _keys{};
     };
 

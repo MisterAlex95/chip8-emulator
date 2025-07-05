@@ -15,6 +15,10 @@ chip8::CPU::cycle()
     auto opcode = fetchOpcode();
     this->_program_counter += 2;
 
+    //    std::cout << std::hex << "[FETCH] PC=" << _program_counter << " OPCODE=0x" << opcode <<
+    //    std::dec
+    //            << "\n";
+
     switch (opcode & 0xF000)
     {
         case 0x0000:
@@ -82,8 +86,7 @@ chip8::CPU::cycle()
         }
 
         default:
-            //            std::cerr << "[Warning] Unhandled opcode: 0x" << std::hex << opcode <<
-            //            std::dec << "\n";
+            std::cerr << "[Warning] Unhandled opcode: 0x" << std::hex << opcode << std::dec << "\n";
             break;
     }
 
@@ -138,8 +141,11 @@ chip8::CPU::decode1(uint16_t opcode)  // 1nnn
 }
 
 void
-chip8::CPU::decode2(uint16_t opcode)  // 1nnn
+chip8::CPU::decode2(uint16_t opcode)  // 2NNN
 {
+    const uint16_t address   = opcode & 0x0FFF;
+    _stack[_stack_pointer++] = _program_counter;
+    _program_counter         = address;
 }
 
 void
@@ -252,18 +258,45 @@ chip8::CPU::decodeE(uint16_t opcode)
 }
 
 void
-chip8::CPU::decodeF(uint16_t opcode)  // Fx29
+chip8::CPU::decodeF(uint16_t opcode)
 {
-    const uint8_t x         = (opcode & 0x0F00) >> 8;
-    const uint8_t last_byte = opcode & 0x00FF;
+    const uint8_t x        = (opcode & 0x0F00) >> 8;
+    const uint8_t lastByte = opcode & 0x00FF;
 
-    switch (last_byte)
+    switch (lastByte)
     {
-        case 0x29:  // Fx29
+        case 0x07:  // FX07: Set Vx = delay timer
+            _registers[x] = _timers->get_delay();
+            break;
+
+        case 0x1E:  // FX1E: I = I + Vx
+            _index_register += _registers[x];
+            break;
+
+        case 0x29:  // FX29: Set I to location of sprite for digit in Vx
             _index_register = chip8::config::FONTSET_START_ADDRESS + (_registers[x] * 5);
             break;
 
+        case 0x33:  // FX33: Store BCD of Vx at I, I+1, I+2
+        {
+            uint8_t value = _registers[x];
+            _memory->setMemoryAt(_index_register, value / 100);
+            _memory->setMemoryAt(_index_register + 1, (value / 10) % 10);
+            _memory->setMemoryAt(_index_register + 2, value % 10);
+            break;
+        }
+
+        case 0x65:  // FX65: Read registers V0 through Vx from memory starting at I
+            for (int i = 0; i <= x; ++i) _registers[i] = _memory->getMemoryAt(_index_register + i);
+            break;
+
+        case 0x55:  // FX55: Store V0 through Vx in memory starting at I
+            for (int i = 0; i <= x; ++i) _memory->setMemoryAt(_index_register + i, _registers[i]);
+            break;
+
         default:
-            std::cerr << "[Warning] Unknown Fx opcode: 0x" << std::hex << opcode << "\n";
+            std::cerr << "[Warning] Unhandled FX__ opcode: 0x" << std::hex << opcode << std::dec
+                      << "\n";
+            break;
     }
 }

@@ -30,7 +30,7 @@ void
 chip8::Memory::setMemoryAt(std::size_t index, uint8_t value)
 {
 #ifdef DEV_MODE
-    std::cout << "Set PC: " << std::hex << index << std::endl;
+    // std::cout << "Set PC: " << std::hex << index << std::endl;
 #endif
     if (index < _memory.size())
     {

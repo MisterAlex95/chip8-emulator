@@ -23,6 +23,8 @@ namespace SDL
         static std::optional<chip8::Key> mapSDLKey(SDL_Keycode key);
 
        private:
+        void printKeysState() const;
+
         std::array<bool, 16> _keys{};
     };
 

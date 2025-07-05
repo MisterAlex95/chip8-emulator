@@ -16,24 +16,22 @@ namespace SDL
 
             else if (event.type == SDL_KEYDOWN)
             {
-                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.scancode);
+                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.sym);
                 if (key.has_value())
                 {
                     auto k   = key.value();
-                    auto evt = new chip8::Event(chip8::Event::Type::KeyDown, k);
-                    keyboard->handleEvent(*evt);
-                    free(evt);
+                    auto evt = chip8::Event(chip8::Event::Type::KeyDown, k);
+                    keyboard->handleEvent(evt);
                 }
             }
             else if (event.type == SDL_KEYUP)
             {
-                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.scancode);
+                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.sym);
                 if (key.has_value())
                 {
                     auto k   = key.value();
-                    auto evt = new chip8::Event(chip8::Event::Type::KeyUp, k);
-                    keyboard->handleEvent(*evt);
-                    free(evt);
+                    auto evt = chip8::Event(chip8::Event::Type::KeyUp, k);
+                    keyboard->handleEvent(evt);
                 }
             }
         }
