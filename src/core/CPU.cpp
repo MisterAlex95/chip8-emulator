@@ -85,6 +85,18 @@ chip8::CPU::cycle()
             break;
         }
 
+        case 0xB000:  // Bnnn
+        {
+            this->decodeB(opcode);
+            break;
+        }
+
+        case 0xC000:  // Cxkk
+        {
+            this->decodeC(opcode);
+            break;
+        }
+
         case 0xD000:  // DRW Vx, Vy, nibble
         {
             this->decodeD(opcode);
@@ -242,6 +254,21 @@ chip8::CPU::decodeA(uint16_t opcode)  // Annn
 }
 
 void
+chip8::CPU::decodeB(uint16_t opcode)  // Bnnn
+{
+    _program_counter = (_registers[0] + (opcode & 0x0FFF));
+}
+
+void
+chip8::CPU::decodeC(uint16_t opcode)  // Cxkk
+{
+    const uint8_t x  = (opcode & 0x0F00) >> 8;
+    const uint8_t kk = opcode & 0x00FF;
+
+    _registers[x] = static_cast<uint8_t>(rand() % 256) & kk;
+}
+
+void
 chip8::CPU::decodeD(uint16_t opcode)  // Dxyn
 {
     const uint8_t x      = (opcode & 0x0F00) >> 8;
@@ -312,35 +339,6 @@ chip8::CPU::decodeF(uint16_t opcode)
             _registers[x] = _timers->get_delay();
             break;
 
-        case 0x15:  // FX15: Set delay timer = Vx
-            _timers->set_delay(_registers[x]);
-            break;
-
-        case 0x1E:  // FX1E: I = I + Vx
-            _index_register += _registers[x];
-            break;
-
-        case 0x29:  // FX29: Set I to location of sprite for digit in Vx
-            _index_register = chip8::config::FONTSET_START_ADDRESS + (_registers[x] * 5);
-            break;
-
-        case 0x33:  // FX33: Store BCD of Vx at I, I+1, I+2
-        {
-            uint8_t value = _registers[x];
-            _memory->setMemoryAt(_index_register, value / 100);
-            _memory->setMemoryAt(_index_register + 1, (value / 10) % 10);
-            _memory->setMemoryAt(_index_register + 2, value % 10);
-            break;
-        }
-
-        case 0x65:  // FX65: Read registers V0 through Vx from memory starting at I
-            for (int i = 0; i <= x; ++i) _registers[i] = _memory->getMemoryAt(_index_register + i);
-            break;
-
-        case 0x55:  // FX55: Store V0 through Vx in memory starting at I
-            for (int i = 0; i <= x; ++i) _memory->setMemoryAt(_index_register + i, _registers[i]);
-            break;
-
         case 0x0A:  // FX0A: Wait for key press, store in Vx
         {
             bool keyPressed = false;
@@ -361,6 +359,39 @@ chip8::CPU::decodeF(uint16_t opcode)
             }
             break;
         }
+
+        case 0x15:  // FX15: Set delay timer = Vx
+            _timers->set_delay(_registers[x]);
+            break;
+
+        case 0x18:  // FX15: Set sound timer = Vx
+            _timers->set_sound(_registers[x]);
+            break;
+
+        case 0x1E:  // FX1E: I = I + Vx
+            _index_register += _registers[x];
+            break;
+
+        case 0x29:  // FX29: Set I to location of sprite for digit in Vx
+            _index_register = chip8::config::FONTSET_START_ADDRESS + (_registers[x] * 5);
+            break;
+
+        case 0x33:  // FX33: Store BCD of Vx at I, I+1, I+2
+        {
+            uint8_t value = _registers[x];
+            _memory->setMemoryAt(_index_register, value / 100);
+            _memory->setMemoryAt(_index_register + 1, (value / 10) % 10);
+            _memory->setMemoryAt(_index_register + 2, value % 10);
+            break;
+        }
+
+        case 0x55:  // FX55: Store V0 through Vx in memory starting at I
+            for (int i = 0; i <= x; ++i) _memory->setMemoryAt(_index_register + i, _registers[i]);
+            break;
+
+        case 0x65:  // FX65: Read registers V0 through Vx from memory starting at I
+            for (int i = 0; i <= x; ++i) _registers[i] = _memory->getMemoryAt(_index_register + i);
+            break;
 
         default:
             std::cerr << "[Warning] Unhandled FX__ opcode: 0x" << std::hex << opcode << std::dec
