@@ -25,7 +25,7 @@ namespace chip8
         Timers*    _timers;
         IKeyboard* _keyboard;
 
-        RegisterArray _registers{};
+        RegisterArray _registers{};  // V
         uint16_t      _index_register  = 0;
         uint16_t      _program_counter = config::ROM_START_ADDRESS;
         StackArray    _stack{};
@@ -37,6 +37,11 @@ namespace chip8
         // Décodeurs spécialisés (optionnel)
         void decode0(uint16_t opcode);
         void decode1(uint16_t opcode);
+        void decode2(uint16_t opcode);
+        void decode3(uint16_t opcode);
+        void decode4(uint16_t opcode);
+        void decode6(uint16_t opcode);
+        void decode7(uint16_t opcode);
         void decode8(uint16_t opcode);
         void decodeD(uint16_t opcode);
         void decodeE(uint16_t opcode);

@@ -15,7 +15,7 @@ namespace chip8
     using DisplayArray  = std::array<bool, config::DISPLAY_X * config::DISPLAY_Y>;
     using KeypadArray   = std::array<Key, 16>;
 
-    enum class Key : std::uint8_t
+    enum class Key : uint8_t
     {
         Num0 = 0x0,
         Num1,

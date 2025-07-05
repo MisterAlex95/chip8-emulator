@@ -7,13 +7,13 @@
 #include "Timers.hh"
 
 chip8::Chip8::Chip8(chip8::IKeyboard* keyboard)
+    : _keyboard(keyboard),
+      _memory(std::make_unique<Memory>()),
+      _display(std::make_unique<Display>()),
+      _timer(std::make_unique<Timers>())
 {
-    _keyboard = keyboard;
-    _memory   = new Memory();
-    _display  = new Display();
-    _timer    = new Timers();
-
-    _cpu = new CPU(_memory, _display, _timer, keyboard);
+    _cpu = std::make_unique<CPU>(_memory.get(), _display.get(), _timer.get(), keyboard);
+    loadFontSet();
 }
 
 void
@@ -76,32 +76,32 @@ chip8::Chip8::cycle()
     this->_cpu->cycle();
 }
 
-[[nodiscard]] const chip8::Timers*
+[[nodiscard]] chip8::Timers*
 chip8::Chip8::getTimer() const
 {
-    return _timer;
+    return _timer.get();
 }
 
-[[nodiscard]] const chip8::Display*
+[[nodiscard]] chip8::Display*
 chip8::Chip8::getDisplay() const
 {
-    return _display;
+    return _display.get();
 }
 
-[[nodiscard]] const chip8::Memory*
+[[nodiscard]] chip8::Memory*
 chip8::Chip8::getMemory() const
 {
-    return _memory;
+    return _memory.get();
 }
 
-[[nodiscard]] const chip8::CPU*
+[[nodiscard]] chip8::CPU*
 chip8::Chip8::getCPU() const
 {
-    return _cpu;
+    return _cpu.get();
 }
 
-[[nodiscard]] const chip8::IKeyboard*
+[[nodiscard]] chip8::IKeyboard*
 chip8::Chip8::getKeyboard() const
 {
-    return _keyboard;
+    return _keyboard.get();
 }

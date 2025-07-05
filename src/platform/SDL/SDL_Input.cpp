@@ -5,7 +5,7 @@
 
 namespace SDL
 {
-    void SDL_Input::pollEvents(const chip8::IKeyboard* keyboard, bool& quitFlag)
+    void SDL_Input::pollEvents(chip8::IKeyboard* keyboard, bool& quitFlag)
     {
         SDL_Event event;
 
@@ -14,7 +14,28 @@ namespace SDL
             if (event.type == SDL_QUIT)
                 quitFlag = false;
 
-            // keyboard->handleEvent(event);
+            else if (event.type == SDL_KEYDOWN)
+            {
+                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.scancode);
+                if (key.has_value())
+                {
+                    auto k   = key.value();
+                    auto evt = new chip8::Event(chip8::Event::Type::KeyDown, k);
+                    keyboard->handleEvent(*evt);
+                    free(evt);
+                }
+            }
+            else if (event.type == SDL_KEYUP)
+            {
+                auto key = SDL::SDL_Keyboard::mapSDLKey(event.key.keysym.scancode);
+                if (key.has_value())
+                {
+                    auto k   = key.value();
+                    auto evt = new chip8::Event(chip8::Event::Type::KeyUp, k);
+                    keyboard->handleEvent(*evt);
+                    free(evt);
+                }
+            }
         }
     }
 }  // namespace SDL

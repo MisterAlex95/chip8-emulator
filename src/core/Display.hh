@@ -13,7 +13,7 @@ namespace chip8
        public:
         Display();
 
-        void                    clean();
+        void                    clear();
         void                    setDisplayAt(std::size_t index, bool value);
         void                    setDisplayAt(int x, int y, bool value);
 

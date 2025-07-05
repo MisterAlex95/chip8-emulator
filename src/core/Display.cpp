@@ -11,11 +11,11 @@ chip8::Display::Display()
 [[nodiscard]] bool
 chip8::Display::isPixelEnable(const int x, const int y) const
 {
-    return _display[y * chip8::config::DISPLAY_X + x] == true;
+    return _display[y * chip8::config::DISPLAY_X + x];
 }
 
 void
-chip8::Display::clean()
+chip8::Display::clear()
 {
     _display.fill(false);
 }
@@ -38,5 +38,8 @@ chip8::Display::setDisplayAt(std::size_t index, bool value)
 void
 chip8::Display::setDisplayAt(int x, int y, bool value)
 {
-    _display[y * chip8::config::DISPLAY_X + x] = value;
+    if (x >= 0 && x < chip8::config::DISPLAY_X && y >= 0 && y < chip8::config::DISPLAY_Y)
+    {
+        _display[y * chip8::config::DISPLAY_X + x] = value;
+    }
 }

@@ -5,7 +5,10 @@
 #include "Display.hh"
 #include "Memory.hh"
 #include "Timers.hh"
+#include "interfaces/IDisplay.hh"
+#include "interfaces/IInput.hh"
 #include "interfaces/IKeyboard.hh"
+#include "interfaces/ITimer.hh"
 
 namespace chip8
 {
@@ -17,18 +20,18 @@ namespace chip8
         bool loadROM(const char* filename);
         void cycle();
 
-        [[nodiscard]] const chip8::CPU*       getCPU() const;
-        [[nodiscard]] const chip8::Display*   getDisplay() const;
-        [[nodiscard]] const chip8::Timers*    getTimer() const;
-        [[nodiscard]] const chip8::Memory*    getMemory() const;
-        [[nodiscard]] const chip8::IKeyboard* getKeyboard() const;
+        [[nodiscard]] chip8::CPU*       getCPU() const;
+        [[nodiscard]] chip8::Display*   getDisplay() const;
+        [[nodiscard]] chip8::Timers*    getTimer() const;
+        [[nodiscard]] chip8::Memory*    getMemory() const;
+        [[nodiscard]] chip8::IKeyboard* getKeyboard() const;
 
        private:
-        chip8::CPU*       _cpu;
-        chip8::Timers*    _timer;
-        chip8::Display*   _display;
-        chip8::Memory*    _memory;
-        chip8::IKeyboard* _keyboard;
+        std::unique_ptr<chip8::CPU>     _cpu;
+        std::unique_ptr<chip8::Memory>  _memory;
+        std::unique_ptr<chip8::Timers>  _timer;
+        std::unique_ptr<chip8::Display> _display;
+        std::unique_ptr<IKeyboard>      _keyboard;
     };
 }  // namespace chip8
 

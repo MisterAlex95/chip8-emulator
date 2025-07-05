@@ -8,26 +8,22 @@ namespace SDL
         this->SDL_Keyboard::reset();
     }
 
-    void SDL_Keyboard::handleEvent(const SDL_Event& event)
+    void SDL_Keyboard::handleEvent(const chip8::Event& event)
     {
-        if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
+        if (event.getType() == chip8::Event::Type::KeyDown ||
+            event.getType() == chip8::Event::Type::KeyUp)
         {
-            const bool pressed = (event.type == SDL_KEYDOWN);
-            const auto mapped  = mapSDLKey(event.key.keysym.sym);
-            if (mapped.has_value())
-            {
-                setKeyState(mapped.value(), pressed);
-            }
+            const bool pressed = (event.getType() == chip8::Event::Type::KeyDown);
+            const auto mapped  = event.getKey();
+            setKeyState(mapped, pressed);
         }
     }
 
-    void SDL_Keyboard::handleEvent(const chip8::Event& event) {}
-
-    void SDL_Keyboard::setKeyState(const uint8_t key, const bool pressed)
+    void SDL_Keyboard::setKeyState(const chip8::Key key, const bool pressed)
     {
-        if (key <= this->_keys.size())
+        if (static_cast<uint8_t>(key) <= this->_keys.size())
         {
-            this->_keys[key] = pressed;
+            this->_keys[static_cast<uint8_t>(key)] = pressed;
         }
     }
 
@@ -46,45 +42,45 @@ namespace SDL
         this->_keys.fill(false);
     }
 
-    std::optional<uint8_t> SDL_Keyboard::mapSDLKey(SDL_Keycode key)
+    std::optional<chip8::Key> SDL_Keyboard::mapSDLKey(SDL_Keycode key)
     {
         switch (key)
         {
             case SDLK_1:
-                return 0x1;
+                return chip8::Key::Num1;
             case SDLK_2:
-                return 0x2;
+                return chip8::Key::Num2;
             case SDLK_3:
-                return 0x3;
+                return chip8::Key::Num3;
             case SDLK_4:
-                return 0xC;
+                return chip8::Key::Num4;
 
             case SDLK_q:
-                return 0x4;
+                return chip8::Key::Num5;
             case SDLK_w:
-                return 0x5;
+                return chip8::Key::Num5;
             case SDLK_e:
-                return 0x6;
+                return chip8::Key::Num6;
             case SDLK_r:
-                return 0xD;
+                return chip8::Key::NumD;
 
             case SDLK_a:
-                return 0x7;
+                return chip8::Key::Num7;
             case SDLK_s:
-                return 0x8;
+                return chip8::Key::Num8;
             case SDLK_d:
-                return 0x9;
+                return chip8::Key::Num9;
             case SDLK_f:
-                return 0xE;
+                return chip8::Key::NumE;
 
             case SDLK_z:
-                return 0xA;
+                return chip8::Key::NumA;
             case SDLK_x:
-                return 0x0;
+                return chip8::Key::Num0;
             case SDLK_c:
-                return 0xB;
+                return chip8::Key::NumB;
             case SDLK_v:
-                return 0xF;
+                return chip8::Key::NumF;
 
             default:
                 return std::nullopt;

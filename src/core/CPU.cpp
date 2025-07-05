@@ -27,14 +27,51 @@ chip8::CPU::cycle()
             break;
         }
 
+        case 0x2000:  //
+        {
+            this->decode2(opcode);
+            break;
+        }
+
+        case 0x3000:  //
+        {
+            this->decode3(opcode);
+            break;
+        }
+
+        case 0x4000:  //
+        {
+            this->decode4(opcode);
+            break;
+        }
+
         case 0xD000:  // DRW Vx, Vy, nibble
         {
             this->decodeD(opcode);
             break;
         }
 
+        case 0x6000:
+        {
+            this->decode6(opcode);
+            break;
+        }
+
+        case 0x7000:
+        {
+            this->decode7(opcode);
+            break;
+        }
+
+        case 0xE000:
+        {
+            this->decodeE(opcode);
+            break;
+        }
+
         default:
-            std::cerr << "[Warning] Unhandled opcode: 0x" << std::hex << opcode << std::dec << "\n";
+            //            std::cerr << "[Warning] Unhandled opcode: 0x" << std::hex << opcode <<
+            //            std::dec << "\n";
             break;
     }
 
@@ -62,7 +99,7 @@ chip8::CPU::decode0(uint16_t opcode)
     switch (opcode & 0x00FF)
     {
         case 0x00E0:  // CLS
-            _display->clean();
+            _display->clear();
             break;
 
         case 0x00EE:  // RET
@@ -82,10 +119,55 @@ chip8::CPU::decode0(uint16_t opcode)
 }
 
 void
-chip8::CPU::decode1(uint16_t opcode)
+chip8::CPU::decode1(uint16_t opcode)  // 1nnn
 {
     const uint16_t address = opcode & 0x0FFF;
     this->_program_counter = address;
+}
+
+void
+chip8::CPU::decode2(uint16_t opcode)  // 1nnn
+{
+}
+
+void
+chip8::CPU::decode3(uint16_t opcode)  // 3xkk
+{
+    const uint8_t x  = (opcode & 0x0F00) >> 8;
+    const uint8_t kk = opcode & 0x00FF;
+
+    if (this->_registers[x] == kk)
+    {
+        this->_program_counter += 2;
+    }
+}
+
+void
+chip8::CPU::decode4(uint16_t opcode)  // 4xkk
+{
+    const uint8_t x  = (opcode & 0x0F00) >> 8;
+    const uint8_t kk = opcode & 0x00FF;
+
+    if (this->_registers[x] != kk)
+    {
+        this->_program_counter += 2;
+    }
+}
+
+void
+chip8::CPU::decode6(uint16_t opcode)  // 6xkk
+{
+    const uint8_t x     = (opcode & 0x0F00) >> 8;
+    const uint8_t kk    = opcode & 0x00FF;
+    this->_registers[x] = kk;
+}
+
+void
+chip8::CPU::decode7(uint16_t opcode)  // 7xkk
+{
+    const uint8_t x  = (opcode & 0x0F00) >> 8;
+    const uint8_t kk = opcode & 0x00FF;
+    this->_registers[x] += kk;
 }
 
 void
@@ -94,7 +176,7 @@ chip8::CPU::decode8(uint16_t opcode)
 }
 
 void
-chip8::CPU::decodeD(uint16_t opcode)
+chip8::CPU::decodeD(uint16_t opcode)  // Dxyn
 {
     const uint8_t x      = (opcode & 0x0F00) >> 8;
     const uint8_t y      = (opcode & 0x00F0) >> 4;
@@ -107,17 +189,20 @@ chip8::CPU::decodeD(uint16_t opcode)
         const uint8_t spriteByte = _memory->getMemoryAt(this->_index_register + row);
         for (uint8_t col = 0; col < 8; ++col)
         {
-            const bool spritePixel = (spriteByte & (0x80 >> col)) != 0;
+            bool spritePixel = (spriteByte & (0x80 >> col)) != 0;
+
             if (spritePixel)
             {
                 const uint16_t pixelX = (this->_registers[x] + col) % chip8::config::DISPLAY_X;
                 const uint16_t pixelY = (this->_registers[y] + row) % chip8::config::DISPLAY_Y;
 
-                if (_display->isPixelEnable(pixelY, pixelX))
-                    this->_registers[0xF] = 1;
+                bool pixelBefore = _display->isPixelEnable(pixelY, pixelX);
+                bool pixelAfter  = pixelBefore ^ true;  // XOR toggle
 
-                _display->setDisplayAt(pixelY, pixelX,
-                                       _display->isPixelEnable(pixelY, pixelX) ^ true);
+                _display->setDisplayAt(pixelY, pixelX, pixelAfter);
+
+                if (pixelBefore && !pixelAfter)
+                    this->_registers[0xF] = 1;
             }
         }
     }
@@ -126,6 +211,26 @@ chip8::CPU::decodeD(uint16_t opcode)
 void
 chip8::CPU::decodeE(uint16_t opcode)
 {
+    const uint8_t x   = (opcode & 0x0F00) >> 8;
+    const uint8_t key = _registers[x];
+
+    switch (opcode & 0x00FF)
+    {
+        case 0x9E:  // Ex9E
+            if (_keyboard->isKeyPressed(key))
+            {
+                _program_counter += 2;
+            }
+            break;
+        case 0xA1:  // ExA1
+            if (!_keyboard->isKeyPressed(key))
+            {
+                _program_counter += 2;
+            }
+            break;
+        default:
+            std::cerr << "[Warning] Unknown opcode: 0x" << std::hex << opcode << std::dec << "\n";
+    }
 }
 
 void

@@ -2,6 +2,7 @@
 #include "interfaces/IDisplay.hh"
 #include "platform/SDL/SDL_Display.hh"
 #include "platform/SDL/SDL_Input.hh"
+#include "platform/SDL/SDL_Keyboard.hh"
 #include "platform/SDL/SDL_Timer.hh"
 #include "window.hh"
 
@@ -16,11 +17,11 @@ main(int argc, char** argv)
     std::cout << "[DEBUG MODE] with " << argc << " arguments\n";
 #endif
 
-    auto  display  = SDL::SDL_Display(10);
-    auto  input    = SDL::SDL_Input();
-    auto  timer    = SDL::SDL_Timer();
-    auto  keyboard = new chip8::Keyboard();
-    auto* chip8    = new chip8::Chip8(keyboard);
+    auto display  = SDL::SDL_Display(10);
+    auto input    = SDL::SDL_Input();
+    auto timer    = SDL::SDL_Timer();
+    auto keyboard = new SDL::SDL_Keyboard();
+    auto chip8    = new chip8::Chip8(keyboard);
 
     chip8->loadFontSet();
 

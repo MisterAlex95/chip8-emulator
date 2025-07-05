@@ -11,11 +11,11 @@ namespace chip8
 
     void Keyboard::handleEvent(const Event& event) {}
 
-    void Keyboard::setKeyState(uint8_t key, bool pressed)
+    void Keyboard::setKeyState(chip8::Key key, bool pressed)
     {
-        if (key < _keys.size())
+        if (static_cast<uint8_t>(key) < _keys.size())
         {
-            _keys[key] = pressed;
+            _keys[static_cast<uint8_t>(key)] = pressed;
         }
         else
         {

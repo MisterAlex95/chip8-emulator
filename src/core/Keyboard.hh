@@ -15,9 +15,9 @@ namespace chip8
         Keyboard();
         ~Keyboard() override = default;
 
-        void                                      handleEvent(const Event& event) override;
-        void                                      setKeyState(uint8_t key, bool pressed) override;
-        [[nodiscard]] bool                        isKeyPressed(uint8_t key) const override;
+        void               handleEvent(const Event& event) override;
+        void               setKeyState(chip8::Key key, bool pressed) override;
+        [[nodiscard]] bool isKeyPressed(uint8_t key) const override;
         [[nodiscard]] const std::array<bool, 16>& getKeys() const override;
         void                                      reset() override;
 
