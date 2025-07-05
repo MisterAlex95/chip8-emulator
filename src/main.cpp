@@ -17,7 +17,7 @@ main(int argc, char** argv)
     std::cout << "[DEBUG MODE] with " << argc << " arguments\n";
 #endif
 
-    auto display  = SDL::SDL_Display(10);
+    auto display  = SDL::SDL_Display(chip8::config::PIXEL_SIZE);
     auto input    = SDL::SDL_Input();
     auto timer    = SDL::SDL_Timer();
     auto keyboard = new SDL::SDL_Keyboard();

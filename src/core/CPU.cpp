@@ -45,12 +45,6 @@ chip8::CPU::cycle()
             break;
         }
 
-        case 0xD000:  // DRW Vx, Vy, nibble
-        {
-            this->decodeD(opcode);
-            break;
-        }
-
         case 0x6000:
         {
             this->decode6(opcode);
@@ -63,9 +57,27 @@ chip8::CPU::cycle()
             break;
         }
 
+        case 0xA000:  //
+        {
+            this->decodeA(opcode);
+            break;
+        }
+
+        case 0xD000:  // DRW Vx, Vy, nibble
+        {
+            this->decodeD(opcode);
+            break;
+        }
+
         case 0xE000:
         {
             this->decodeE(opcode);
+            break;
+        }
+
+        case 0xF000:
+        {
+            this->decodeF(opcode);
             break;
         }
 
@@ -176,6 +188,12 @@ chip8::CPU::decode8(uint16_t opcode)
 }
 
 void
+chip8::CPU::decodeA(uint16_t opcode)  // Annn
+{
+    _index_register = opcode & 0x0FFF;
+}
+
+void
 chip8::CPU::decodeD(uint16_t opcode)  // Dxyn
 {
     const uint8_t x      = (opcode & 0x0F00) >> 8;
@@ -234,6 +252,18 @@ chip8::CPU::decodeE(uint16_t opcode)
 }
 
 void
-chip8::CPU::decodeF(uint16_t opcode)
+chip8::CPU::decodeF(uint16_t opcode)  // Fx29
 {
+    const uint8_t x         = (opcode & 0x0F00) >> 8;
+    const uint8_t last_byte = opcode & 0x00FF;
+
+    switch (last_byte)
+    {
+        case 0x29:  // Fx29
+            _index_register = chip8::config::FONTSET_START_ADDRESS + (_registers[x] * 5);
+            break;
+
+        default:
+            std::cerr << "[Warning] Unknown Fx opcode: 0x" << std::hex << opcode << "\n";
+    }
 }

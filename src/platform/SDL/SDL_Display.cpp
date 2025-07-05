@@ -4,6 +4,8 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 
+#include "core/Chip8.hh"
+
 #include <iostream>
 
 namespace SDL
@@ -17,6 +19,7 @@ namespace SDL
 
     SDL_Display::~SDL_Display()
     {
+        SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
     }
@@ -27,7 +30,7 @@ namespace SDL
         SDL_RenderClear(renderer);
     }
 
-    void SDL_Display::drawPixel(int x, int y, bool on)
+    void SDL_Display::drawPixel(int y, int x, bool on)
     {
         SDL_Rect rect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
@@ -45,7 +48,9 @@ namespace SDL
             return false;
 
         window = SDL_CreateWindow(window_title ? window_title : "SDL Window",
-                                  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 680, 480, 0);
+                                  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                  chip8::config::DISPLAY_X * chip8::config::PIXEL_SIZE,
+                                  chip8::config::DISPLAY_Y * chip8::config::PIXEL_SIZE, 0);
         if (!window)
             return false;
 

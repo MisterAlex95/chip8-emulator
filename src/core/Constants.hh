@@ -7,6 +7,7 @@ namespace chip8
     namespace config {
         constexpr std::size_t DISPLAY_X = 64;
         constexpr std::size_t DISPLAY_Y = 32;
+        constexpr std::size_t PIXEL_SIZE = 10;
 
         constexpr std::size_t MEMORY_SIZE   = 4096;
         constexpr std::size_t REGISTER_SIZE = 16;

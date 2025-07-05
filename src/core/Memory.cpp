@@ -15,9 +15,9 @@ chip8::Memory::getSize() const
 [[nodiscard]] uint8_t
 chip8::Memory::getMemoryAt(std::size_t index) const
 {
-    #ifdef DEV_MODE
-        std::cout << "Get PC: " << std::hex << index << std::endl;
-    #endif
+#ifdef DEV_MODE
+    // std::cout << "Get PC: " << std::hex << index << std::endl;
+#endif
 
     if (index < _memory.size())
     {
@@ -29,9 +29,9 @@ chip8::Memory::getMemoryAt(std::size_t index) const
 void
 chip8::Memory::setMemoryAt(std::size_t index, uint8_t value)
 {
-    #ifdef DEV_MODE
-        std::cout << "Set PC: " << std::hex << index << std::endl;
-    #endif
+#ifdef DEV_MODE
+    std::cout << "Set PC: " << std::hex << index << std::endl;
+#endif
     if (index < _memory.size())
     {
         _memory[index] = value;

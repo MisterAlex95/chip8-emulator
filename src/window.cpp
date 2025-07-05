@@ -16,16 +16,17 @@ mainLoop(chip8::Chip8* chip8, IInput& input, IDisplay& display, ITimer& timer)
     {
         uint32_t frameStart = timer.getTicks();
 
-        // 1. Gérer les événements SDL (fermeture de fenêtre, clavier, etc.)
+        // Event Loop
         auto keyboard = chip8->getKeyboard();
         input.pollEvents(keyboard, running);
 
-        // 2. Faire un cycle CPU
+        // CPU Cycle
         chip8->cycle();
 
-        // 3. Dessiner l’écran (plus tard, avec l’opcode DRW)
+        // Clear before drawing
         display.clear();
 
+        // Drawing the screen
         for (int y = 0; y < chip8::config::DISPLAY_Y; ++y)
         {
             for (int x = 0; x < chip8::config::DISPLAY_X; ++x)
@@ -39,7 +40,7 @@ mainLoop(chip8::Chip8* chip8, IInput& input, IDisplay& display, ITimer& timer)
 
         display.present();
 
-        // 4. Attendre pour respecter 60 FPS
+        // Limit at 60fps
         uint32_t frameTime = timer.getTicks() - frameStart;
         if (frameDelay > frameTime)
         {
