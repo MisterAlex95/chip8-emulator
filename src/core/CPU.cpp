@@ -208,7 +208,7 @@ chip8::CPU::decode5(uint16_t opcode)  // 5xy0
     const uint8_t x = (opcode & 0x0F00) >> 8;
     const uint8_t y = opcode & 0x00F0 >> 4;
 
-    if (this->_registers[x] == y)
+    if (this->_registers[x] == this->_registers[y])
     {
         this->_program_counter += 2;
     }
@@ -233,6 +233,64 @@ chip8::CPU::decode7(uint16_t opcode)  // 7xkk
 void
 chip8::CPU::decode8(uint16_t opcode)
 {
+    const uint8_t x = (opcode & 0x0F00) >> 8;
+    const uint8_t y = opcode & 0x00F0 >> 4;
+
+    switch (opcode & 0x000F)
+    {
+        case 0x0:  // 8xy0
+            this->_registers[x] = this->_registers[y];
+            break;
+
+        case 0x1:  // 8xy1
+            this->_registers[x] = this->_registers[x] | this->_registers[y];
+            break;
+
+        case 0x2:  // 8xy2
+            this->_registers[x] = this->_registers[x] & this->_registers[y];
+            break;
+
+        case 0x3:  // 8xy3
+            this->_registers[x] = this->_registers[x] ^ this->_registers[y];
+            break;
+
+        case 0x4:  // 8xy4
+        {
+            uint16_t sum    = _registers[x] + _registers[y];
+            _registers[0xF] = (sum > 0xFF) ? 1 : 0;
+            _registers[x]   = static_cast<uint8_t>(sum & 0xFF);
+            break;
+        }
+
+        case 0x5:  // 8xy5: Vx = Vx - Vy, VF = NOT borrow
+        {
+            _registers[0xF] = (_registers[x] >= _registers[y]) ? 1 : 0;
+            _registers[x]   = _registers[x] - _registers[y];
+            break;
+        }
+
+        case 0x6:  // 8xy6: SHR Vx {, Vy}
+        {
+            _registers[0xF] = _registers[x] & 0x1;  // bit LSB avant le décalage
+            _registers[x] >>= 1;
+            break;
+        }
+
+        case 0x7:  // 8xy7
+        {
+            _registers[0xF] = (_registers[x] >= _registers[y]) ? 1 : 0;
+            _registers[x]   = _registers[y] - _registers[x];
+            break;
+        }
+
+        case 0xE:  // 8xyE
+        {
+            _registers[0xF] = (_registers[x] & 0x80) >> 7;  // MSB dans VF
+            _registers[x] <<= 1;
+
+            break;
+        }
+    }
 }
 
 void
@@ -241,7 +299,7 @@ chip8::CPU::decode9(uint16_t opcode)  // 9xy0
     const uint8_t x = (opcode & 0x0F00) >> 8;
     const uint8_t y = opcode & 0x00F0 >> 4;
 
-    if (this->_registers[x] != y)
+    if (this->_registers[x] != this->_registers[y])
     {
         this->_program_counter += 2;
     }
@@ -364,7 +422,7 @@ chip8::CPU::decodeF(uint16_t opcode)
             _timers->set_delay(_registers[x]);
             break;
 
-        case 0x18:  // FX15: Set sound timer = Vx
+        case 0x18:  // FX18: Set sound timer = Vx
             _timers->set_sound(_registers[x]);
             break;
 

@@ -9,15 +9,15 @@
 | 5xy0   | SE Vx, Vy : Saute si Vx == Vy                                                        | ✅    |
 | 6xkk   | LD Vx, byte : Met la valeur kk dans Vx                                               | ✅    |
 | 7xkk   | ADD Vx, byte : Ajoute kk à Vx                                                        | ✅    |
-| 8xy0   | LD Vx, Vy : Copie Vy dans Vx                                                         |      |
-| 8xy1   | OR Vx, Vy : Vx = Vx OR Vy                                                            |      |
-| 8xy2   | AND Vx, Vy : Vx = Vx AND Vy                                                          |      |
-| 8xy3   | XOR Vx, Vy : Vx = Vx XOR Vy                                                          |      |
-| 8xy4   | ADD Vx, Vy : Ajoute Vy à Vx, VF = retenue                                            |      |
-| 8xy5   | SUB Vx, Vy : Vx = Vx - Vy, VF = NOT retenue                                          |      |
-| 8xy6   | SHR Vx {, Vy} : Décale Vx à droite d’un bit, VF = bit de poids faible avant décalage |      |
-| 8xy7   | SUBN Vx, Vy : Vx = Vy - Vx, VF = NOT retenue                                         |      |
-| 8xyE   | SHL Vx {, Vy} : Décale Vx à gauche d’un bit, VF = bit de poids fort avant décalage   |      |
+| 8xy0   | LD Vx, Vy : Copie Vy dans Vx                                                         | ✅    |
+| 8xy1   | OR Vx, Vy : Vx = Vx OR Vy                                                            | ✅    |
+| 8xy2   | AND Vx, Vy : Vx = Vx AND Vy                                                          | ✅    |
+| 8xy3   | XOR Vx, Vy : Vx = Vx XOR Vy                                                          | ✅    |
+| 8xy4   | ADD Vx, Vy : Ajoute Vy à Vx, VF = retenue                                            | ✅    |
+| 8xy5   | SUB Vx, Vy : Vx = Vx - Vy, VF = NOT retenue                                          | ✅    |
+| 8xy6   | SHR Vx {, Vy} : Décale Vx à droite d’un bit, VF = bit de poids faible avant décalage | ✅    |
+| 8xy7   | SUBN Vx, Vy : Vx = Vy - Vx, VF = NOT retenue                                         | ✅    |
+| 8xyE   | SHL Vx {, Vy} : Décale Vx à gauche d’un bit, VF = bit de poids fort avant décalage   | ✅    |
 | 9xy0   | SNE Vx, Vy : Saute si Vx != Vy                                                       | ✅    |
 | Annn   | LD I, addr : Charge I avec l’adresse nnn                                             | ✅    |
 | Bnnn   | JP V0, addr : Saute à l’adresse nnn + V0                                             | ✅    |
