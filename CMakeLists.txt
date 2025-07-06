@@ -32,7 +32,6 @@ add_executable(${PROJECT_NAME}
         src/core/Chip8.cpp
         src/core/CPU.cpp
         src/core/Display.cpp
-        src/core/Keyboard.cpp
         src/core/Memory.cpp
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp
@@ -76,7 +75,6 @@ add_executable(tests_all
         src/core/Chip8.cpp
         src/core/CPU.cpp
         src/core/Display.cpp
-        src/core/Keyboard.cpp
         src/core/Memory.cpp
         src/interfaces/IKeyboard.hh
         src/platform/SDL/SDL_Keyboard.cpp

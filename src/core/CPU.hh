@@ -2,10 +2,11 @@
 #define CHIP8_CPU_HH
 
 #include "Display.hh"
-#include "Keyboard.hh"
 #include "Memory.hh"
 #include "Timers.hh"
 #include "Types.hh"
+#include "interfaces/IKeyboard.hh"
+
 #include <cstdint>
 
 namespace chip8
